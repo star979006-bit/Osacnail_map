@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Osac Nail 口袋地圖 💅</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --main: #d4a373; --bg: #fffcf9; }
+        body { font-family: sans-serif; background: var(--bg); margin: 0; display: flex; justify-content: center; }
+        .app { width: 100%; max-width: 500px; min-height: 100vh; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
+        header { background: var(--main); color: white; padding: 30px 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+        .content { padding: 20px; }
+        .step { display: none; }
+        .active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .btn { width: 100%; padding: 18px; margin-bottom: 15px; border: 1.5px solid #eee; border-radius: 15px; background: white; text-align: left; font-size: 16px; cursor: pointer; display: flex; align-items: center; }
+        .btn i { margin-right: 15px; color: var(--main); }
+        .back { color: var(--main); cursor: pointer; margin-bottom: 20px; display: inline-block; }
+        .card { background: #fdfaf6; border-radius: 15px; border: 1px solid #f1e4d3; overflow: hidden; padding: 20px; }
+        .review { background: #fff; padding: 15px; border-top: 1px dashed var(--main); margin-top: 15px; }
+        .map-link { display: block; background: var(--main); color: white; text-align: center; padding: 12px; text-decoration: none; border-radius: 10px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+<div class="app">
+    <header><h1 style="margin:0;">Osac Nail 口袋地圖</h1><p style="margin:5px 0 0; opacity:0.8;">美甲師與客人的私藏推薦</p></header>
+    <div class="content">
+        <div id="s1" class="step active">
+            <h3>🌍 選擇探索地區</h3>
+            <button class="btn" onclick="go('s1','s2')"><i class="fas fa-map"></i> 台灣 Taiwan</button>
+            <button class="btn" onclick="alert('日本清單整理中！')"><i class="fas fa-plane"></i> 日本 Japan</button>
+        </div>
+        <div id="s2" class="step">
+            <span class="back" onclick="go('s2','s1')">← 回上層</span>
+            <h3>📍 選擇縣市</h3>
+            <button class="btn" onclick="go('s2','s3')">台南 Tainan</button>
+        </div>
+        <div id="s3" class="step">
+            <span class="back" onclick="go('s3','s2')">← 回上層</span>
+            <h3>🍱 分類</h3>
+            <button class="btn" onclick="go('s3','s4')"><i class="fas fa-utensils"></i> 美食美食</button>
+        </div>
+        <div id="s4" class="step">
+            <span class="back" onclick="go('s4','s3')">← 回上層</span>
+            <h3>🔍 台南區域</h3>
+            <button class="btn" onclick="show('南區','阿婆土魠魚羹','台南市南區XX路','陳小姐','土魠魚塊超酥，從小吃到大！')">南區</button>
+            <button class="btn" onclick="show('仁德區','巷口麻醬麵','台南市仁德區OO路','客人王小姐','麻醬非常濃郁，必加辣油！')">仁德區</button>
+        </div>
+        <div id="final" class="step">
+            <span class="back" onclick="go('final','s4')">← 重選區域</span>
+            <div id="res"></div>
+        </div>
+    </div>
+</div>
+<script>
+    function go(c,n){document.getElementById(c).classList.remove('active');document.getElementById(n).classList.add('active');window.scrollTo(0,0);}
+    function show(area,name,addr,guest,msg){
+        document.getElementById('res').innerHTML = `
+            <div class="card">
+                <h2 style="margin:0;color:#bc8a5f">${name}</h2>
+                <p style="font-size:14px;color:#999">${area} | ${addr}</p>
+                <div class="review">
+                    <b style="color:var(--main)">💬 客人 ${guest} 推薦：</b>
+                    <p style="margin:5px 0;">${msg}</p>
+                </div>
+                <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name+addr)}" target="_blank">Google 地圖導航</a>
+            </div>`;
+        go('s4','final');
+    }
+</script>
+</body>
+</html>
