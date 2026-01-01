@@ -12,7 +12,6 @@
         header { text-align: center; margin-bottom: 30px; }
         h1 { color: var(--main-color); margin-bottom: 5px; }
         
-        /* 搜尋與篩選區 */
         .filter-section { background: #fff; padding: 15px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
         .search-box { position: relative; margin-bottom: 15px; }
         .search-box input { width: 100%; padding: 12px 40px 12px 15px; border: 2px solid #e9edc9; border-radius: 25px; box-sizing: border-box; outline: none; }
@@ -22,10 +21,15 @@
         .tag-btn { background: #e9edc9; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 14px; transition: 0.3s; }
         .tag-btn.active { background: var(--main-color); color: white; }
 
-        /* 店家卡片 */
+        /* 滑動相簿樣式 */
         .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: none; }
         .card.visible { display: block; animation: fadeIn 0.5s; }
-        .card img { width: 100%; border-radius: 15px; margin-bottom: 15px; object-fit: cover; max-height: 300px; }
+        
+        .album-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; margin-bottom: 15px; border-radius: 15px; -webkit-overflow-scrolling: touch; }
+        .album-container::-webkit-scrollbar { display: none; } /* 隱藏捲軸 */
+        .album-container img { width: 100%; flex-shrink: 0; scroll-snap-align: start; object-fit: cover; max-height: 400px; border-radius: 15px; background: #eee; }
+        .album-hint { font-size: 11px; color: #999; text-align: center; margin-top: -10px; margin-bottom: 10px; }
+
         .card h2 { margin: 0 0 10px 0; color: #bc6c25; font-size: 1.4em; }
         .info-row { font-size: 14px; margin-bottom: 8px; display: flex; align-items: flex-start; }
         .info-row i { width: 25px; color: var(--main-color); margin-top: 3px; }
@@ -39,7 +43,7 @@
     <div class="container">
         <header>
             <h1>Osac Nail 口袋地圖</h1>
-            <p>美甲師與妳的台南私藏清單</p>
+            <p>美甲師與妳的私藏清單</p>
         </header>
 
         <div class="filter-section">
@@ -47,15 +51,13 @@
                 <input type="text" id="searchInput" placeholder="搜尋店名、評價或標籤..." onkeyup="filterData()">
                 <i class="fas fa-search"></i>
             </div>
-            <div id="tagList" class="tag-cloud">
-                </div>
+            <div id="tagList" class="tag-cloud"></div>
         </div>
 
-        <div id="list">正在載入美甲師的名單...</div>
+        <div id="list">正在載入名單中...</div>
     </div>
 
     <script>
-        // 請確保這是妳發佈到網路的 CSV 連結
         const sheetID = "1SzMD4N7G66Iu3OnlX5POVTi-45hRsPBk_50B6CwyjZQ";
         const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv`;
 
@@ -76,8 +78,8 @@
                         address: cols[2]?.trim(),
                         recommender: cols[3]?.trim(),
                         content: cols[4]?.trim(),
-                        tags: cols[5]?.replace(/"/g, '').split(',').map(t => t.trim()),
-                        img: cols[6]?.trim(),
+                        tags: cols[5]?.replace(/"/g, '').split(',').map(t => t.trim()).filter(t => t),
+                        imgList: cols[6]?.replace(/"/g, '').split(',').map(url => url.trim()).filter(url => url),
                         time: cols[7]?.trim()
                     };
                 }).filter(item => item.name);
@@ -85,17 +87,16 @@
                 renderTags();
                 renderCards(allData);
             } catch (e) {
-                document.getElementById('list').innerHTML = "載入失敗，請確認試算表已發佈到網路。";
+                document.getElementById('list').innerHTML = "載入失敗，請確認試算表已發佈。";
             }
         }
 
         function renderTags() {
             const tags = new Set();
             allData.forEach(item => {
-                tags.add(item.region);
-                item.tags.forEach(t => { if(t) tags.add(t); });
+                if(item.region) tags.add(item.region);
+                item.tags.forEach(t => tags.add(t));
             });
-
             const tagList = document.getElementById('tagList');
             tagList.innerHTML = '';
             tags.forEach(tag => {
@@ -108,51 +109,50 @@
         }
 
         function toggleTag(tag, btn) {
-            if (activeTags.has(tag)) {
-                activeTags.delete(tag);
-                btn.classList.remove('active');
-            } else {
-                activeTags.add(tag);
-                btn.classList.add('active');
-            }
+            activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag);
+            btn.classList.toggle('active');
             filterData();
         }
 
         function renderCards(data) {
             const list = document.getElementById('list');
-            list.innerHTML = data.length ? '' : '找不到符合條件的店家 T_T';
+            list.innerHTML = data.length ? '' : '找不到結果 T_T';
             
             data.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card visible';
-                const imgHtml = item.img ? `<img src="${item.img}" onerror="this.style.display='none'">` : '';
+                
+                // 多圖處理
+                let albumHtml = '';
+                if (item.imgList.length > 0) {
+                    albumHtml = `<div class="album-container">${item.imgList.map(url => `<img src="${url}">`).join('')}</div>`;
+                    if (item.imgList.length > 1) albumHtml += `<p class="album-hint">👈 左右滑動查看照片 (${item.imgList.length}張)</p>`;
+                }
+
                 const tagsHtml = item.tags.map(t => `<span style="font-size:11px; background:#e9edc9; padding:2px 6px; border-radius:5px; margin-right:5px;">#${t}</span>`).join('');
                 
                 card.innerHTML = `
-                    ${imgHtml}
+                    ${albumHtml}
                     <h2>${item.name}</h2>
                     <div class="info-row"><i class="fas fa-map-marker-alt"></i><span>${item.address}</span></div>
-                    <div class="info-row"><i class="fas fa-user-heart"></i><span>推薦人：${item.recommender}</span></div>
+                    <div class="info-row"><i class="fas fa-user-heart"></i><span>推薦：${item.recommender}</span></div>
                     <div style="margin: 10px 0;">${tagsHtml}</div>
                     <div class="comment-box">「${item.content}」</div>
-                    <div class="time-tag">📅 更新於：${item.time || '未知'}</div>
+                    <div class="time-tag">📅 更新：${item.time || '-'}</div>
                 `;
                 list.appendChild(card);
             });
         }
 
         function filterData() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const search = document.getElementById('searchInput').value.toLowerCase();
             const filtered = allData.filter(item => {
-                const matchesSearch = item.name.toLowerCase().includes(searchTerm) || 
-                                     item.content.toLowerCase().includes(searchTerm);
-                const matchesTags = activeTags.size === 0 || 
-                                   [item.region, ...item.tags].some(t => activeTags.has(t));
-                return matchesSearch && matchesTags;
+                const textMatch = item.name.toLowerCase().includes(search) || item.content.toLowerCase().includes(search);
+                const tagMatch = activeTags.size === 0 || [item.region, ...item.tags].some(t => activeTags.has(t));
+                return textMatch && tagMatch;
             });
             renderCards(filtered);
         }
-
         fetchData();
     </script>
 </body>
