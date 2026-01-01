@@ -5,29 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Osac Nail 口袋地圖</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
-        :root { --main-color: #d4a373; --bg-color: #fefae0; --text-color: #606c38; }
+        :root { 
+            --main-color: #d4a373; --bg-color: #fefae0; --text-color: #606c38;
+            --beauty-color: #ffafcc; --goody-color: #a2d2ff;
+        }
         body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.6; }
         .container { max-width: 600px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 20px; }
+        header { text-align: center; margin-bottom: 30px; }
         h1 { color: var(--main-color); margin-bottom: 5px; }
-        .filter-section { background: #fff; padding: 15px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; position: sticky; top: 10px; z-index: 100; }
+        
+        .filter-section { background: #fff; padding: 15px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; position: relative; }
         .search-box { position: relative; margin-bottom: 15px; }
         .search-box input { width: 100%; padding: 12px 40px 12px 15px; border: 2px solid #e9edc9; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 16px; }
         .search-box i { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--main-color); }
-        .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; max-height: 120px; overflow-y: auto; padding: 5px; }
-        .tag-btn { background: #e9edc9; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 13px; transition: 0.3s; color: var(--text-color); white-space: nowrap; }
+        
+        /* 標籤摺疊容器 */
+        .tag-wrapper { position: relative; }
+        .tag-cloud { 
+            display: flex; flex-wrap: wrap; gap: 8px; 
+            overflow: hidden; max-height: 85px; /* 預設顯示約兩行的高度 */
+            transition: max-height 0.3s ease-out;
+        }
+        .tag-cloud.expanded { max-height: 1000px; }
+        
+        .tag-btn { background: #e9edc9; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 14px; color: var(--text-color); white-space: nowrap; }
         .tag-btn.active { background: var(--main-color); color: white; }
-        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); animation: fadeIn 0.5s; }
-        .card img { width: 100%; border-radius: 15px; margin-bottom: 15px; object-fit: cover; max-height: 350px; display: block; border: none; }
+        
+        /* 展開/收合按鈕樣式 */
+        .toggle-tags-btn { 
+            display: block; width: 100%; text-align: right; 
+            font-size: 12px; color: var(--main-color); cursor: pointer; 
+            margin-top: 8px; font-weight: bold;
+        }
+
+        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--main-color); }
+        .card.beauty { border-top-color: var(--beauty-color); }
+        .card.goody { border-top-color: var(--goody-color); }
+        .swiper { width: 100%; height: 350px; border-radius: 15px; margin-bottom: 15px; background: #f0f0f0; }
+        .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
         .card h2 { margin: 0 0 10px 0; color: #bc6c25; font-size: 1.3em; }
         .info-row { font-size: 14px; margin-bottom: 8px; display: flex; align-items: flex-start; }
-        .info-row i { width: 25px; color: var(--main-color); margin-top: 3px; }
-        .info-row a { color: var(--main-color); text-decoration: none; border-bottom: 1px solid var(--main-color); }
-        .comment-box { background: #fefae0; padding: 12px; border-radius: 10px; border-left: 4px solid var(--main-color); margin-top: 10px; font-style: italic; }
+        .info-row i { width: 25px; margin-top: 4px; }
+        .btn-link { display: inline-block; background: var(--main-color); color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; margin-top: 5px; }
+        .beauty .btn-link { background: var(--beauty-color); }
+        .goody .btn-link { background: var(--goody-color); }
+        .comment-box { background: #fefae0; padding: 15px; border-radius: 10px; border-left: 4px solid var(--main-color); margin-top: 12px; white-space: pre-wrap; font-size: 14px; color: #444; }
+        .beauty .comment-box { border-left-color: var(--beauty-color); }
+        .goody .comment-box { border-left-color: var(--goody-color); }
         .time-tag { font-size: 11px; color: #a9a9a9; text-align: right; margin-top: 15px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -36,126 +63,102 @@
             <h1>Osac Nail 口袋地圖</h1>
             <p>美甲師與妳的質感生活指南</p>
         </header>
-
         <div class="filter-section">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="搜尋店名、評價或標籤..." onkeyup="filterData()">
+                <input type="text" id="searchInput" placeholder="搜尋美食、美妝或好物..." onkeyup="filterData()">
                 <i class="fas fa-search"></i>
             </div>
-            <div id="tagList" class="tag-cloud"></div>
+            <div class="tag-wrapper">
+                <div id="tagList" class="tag-cloud"></div>
+                <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
+            </div>
         </div>
-
-        <div id="list">正在同步美甲師的最新名單...</div>
+        <div id="list">名單正在準備中...</div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script>
         const sheetID = "1SzMD4N7G66Iu3OnlX5POVTi-45hRsPBk_50B6CwyjZQ";
         const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv`;
-
         let allData = [];
         let activeTags = new Set();
 
         async function fetchData() {
-            try {
-                const response = await fetch(csvUrl);
-                const data = await response.text();
-                // 修正換行問題與解析 CSV
-                const rows = data.split(/\r?\n/).filter(line => line.trim() !== "");
-                const headers = rows[0].split(',');
-
-                allData = rows.slice(1).map(row => {
-                    // 處理 CSV 欄位，去除引號與多餘空白
-                    const cols = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-                    const clean = cols.map(c => c.replace(/^"|"$/g, '').trim());
-                    
-                    return {
-                        region: clean[0] || "",
-                        name: clean[1] || "",
-                        address: clean[2] || "",
-                        recommender: clean[3] || "",
-                        content: clean[4] || "",
-                        tags: clean[5] ? clean[5].split(/[,，]/).map(t => t.replace(/^"|"$/g, '').trim()).filter(t => t !== "") : [],
-                        img: clean[6] || "",
-                        time: clean[7] || ""
-                    };
-                }).filter(item => item.name);
-
-                renderTags();
-                renderCards(allData);
-            } catch (e) {
-                document.getElementById('list').innerHTML = "資料讀取失敗，請檢查網路。";
-            }
+            Papa.parse(csvUrl, {
+                download: true, header: true,
+                complete: function(results) {
+                    allData = results.data.map(row => ({
+                        region: row['區域'] || '', name: row['店名'] || '', address: row['地址'] || '',
+                        recommender: row['推薦人'] || '', content: row['評價內容'] || '',
+                        tags: row['標籤'] ? row['標籤'].split(/[,，]/).map(t => t.trim()) : [],
+                        imgs: row['圖片網址'] ? row['圖片網址'].split(/[;；]/).map(i => i.trim()) : [],
+                        time: row['新增時間'] || ''
+                    })).filter(item => item.name);
+                    renderTags();
+                    renderCards(allData);
+                }
+            });
         }
 
         function renderTags() {
             const tags = new Set();
-            allData.forEach(item => {
-                if(item.region) tags.add(item.region);
-                item.tags.forEach(t => { if(t) tags.add(t); });
-            });
+            allData.forEach(item => { if(item.region) tags.add(item.region); item.tags.forEach(t => { if(t) tags.add(t); }); });
             const tagList = document.getElementById('tagList');
             tagList.innerHTML = '';
-            Array.from(tags).sort().forEach(tag => {
+            tags.forEach(tag => {
                 const btn = document.createElement('button');
                 btn.className = 'tag-btn';
                 btn.innerText = tag;
-                btn.onclick = () => toggleTag(tag, btn);
+                btn.onclick = () => { btn.classList.toggle('active'); activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag); filterData(); };
                 tagList.appendChild(btn);
             });
+            // 判斷是否需要顯示「更多標籤」
+            setTimeout(() => {
+                const btn = document.getElementById('toggleBtn');
+                btn.style.display = tagList.scrollHeight > tagList.clientHeight ? "block" : "none";
+            }, 500);
         }
 
-        function toggleTag(tag, btn) {
-            if (activeTags.has(tag)) { activeTags.delete(tag); btn.classList.remove('active'); }
-            else { activeTags.add(tag); btn.classList.add('active'); }
-            filterData();
+        function toggleTags() {
+            const cloud = document.getElementById('tagList');
+            const btn = document.getElementById('toggleBtn');
+            cloud.classList.toggle('expanded');
+            btn.innerText = cloud.classList.contains('expanded') ? "收合標籤" : "更多標籤...";
         }
 
         function renderCards(data) {
             const list = document.getElementById('list');
-            list.innerHTML = data.length ? '' : '<div style="text-align:center;padding:20px;">找不到符合條件的項目 T_T</div>';
-            
-            data.forEach(item => {
+            list.innerHTML = data.length ? '' : '找不到符合條件的項目 T_T';
+            data.forEach((item, index) => {
+                let cardClass = "card";
+                let btnText = "點我開啟地圖";
+                let icon = "fa-map-marker-alt";
+                if (item.region.includes("美妝")) { cardClass = "card beauty"; btnText = "撒錢連結這邊請 (慎點"; icon = "fa-shopping-cart"; }
+                else if (item.region.includes("好物")) { cardClass = "card goody"; btnText = "撒錢連結這邊請 (慎點"; icon = "fa-shopping-cart"; }
+
                 const card = document.createElement('div');
-                card.className = 'card';
-                
-                let imgHtml = '';
-                if (item.img && item.img.startsWith('http')) {
-                    // 支援 GitHub raw 連結與一般圖片連結
-                    const finalImg = item.img.includes('github.com') ? item.img.replace('/blob/', '/raw/').split('?')[0] : item.img;
-                    imgHtml = `<img src="${finalImg}" onerror="this.style.display='none'">`;
+                card.className = cardClass;
+                let swiperHtml = '';
+                if (item.imgs.length > 0 && item.imgs[0] !== "") {
+                    swiperHtml = `<div class="swiper swiper-${index}"><div class="swiper-wrapper">` +
+                        item.imgs.map(img => `<div class="swiper-slide"><img src="${img}" onerror="this.src='https://placehold.co/600x400?text=Osac+Nail'"></div>`).join('') +
+                        `</div><div class="swiper-pagination"></div></div>`;
                 }
+                const linkHtml = item.address.startsWith('http') ? `<a href="${item.address}" target="_blank" class="btn-link"><i class="fas ${icon}"></i> ${btnText}</a>` : `<span>${item.address}</span>`;
 
-                let addressHtml = item.address || '尚未提供地址';
-                if (addressHtml.startsWith('http')) {
-                    addressHtml = `<a href="${addressHtml}" target="_blank">點我看地圖</a>`;
-                }
-
-                const tagsHtml = item.tags.map(t => `<span style="font-size:11px; background:#e9edc9; padding:2px 6px; border-radius:5px; margin-right:5px; color:#606c38;">#${t}</span>`).join('');
-                
-                card.innerHTML = `
-                    ${imgHtml}
-                    <h2>${item.name}</h2>
-                    <div class="info-row"><i class="fas fa-map-marker-alt"></i><span>${addressHtml}</span></div>
-                    <div class="info-row"><i class="fas fa-user-heart"></i><span>推薦：${item.recommender}</span></div>
-                    <div style="margin: 10px 0;">${tagsHtml}</div>
-                    <div class="comment-box">「${item.content}」</div>
-                    <div class="time-tag">📅 更新：${item.time || '最近'}</div>
-                `;
+                card.innerHTML = `${swiperHtml}<h2>${item.name}</h2><div class="info-row"><i class="fas ${icon}" style="color:inherit"></i>${linkHtml}</div><div class="info-row"><i class="fas fa-user-heart" style="color:inherit"></i><span>推薦人：${item.recommender}</span></div><div class="comment-box">${item.content}</div><div class="time-tag">📅 更新：${item.time}</div>`;
                 list.appendChild(card);
+                if (item.imgs.length > 1) { new Swiper(`.swiper-${index}`, { pagination: { el: '.swiper-pagination', clickable: true } }); }
             });
         }
 
         function filterData() {
-            const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+            const term = document.getElementById('searchInput').value.toLowerCase();
             const filtered = allData.filter(item => {
-                const searchPool = `${item.name} ${item.content} ${item.region} ${item.tags.join(' ')}`.toLowerCase();
-                const matchesSearch = searchTerm === "" || searchPool.includes(searchTerm);
-                
-                const itemTags = [item.region, ...item.tags];
-                const matchesTags = activeTags.size === 0 || 
-                                   Array.from(activeTags).every(t => itemTags.includes(t));
-                
-                return matchesSearch && matchesTags;
+                const matchSearch = item.name.toLowerCase().includes(term) || item.content.toLowerCase().includes(term);
+                const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => [item.region, ...item.tags].includes(t));
+                return matchSearch && matchTags;
             });
             renderCards(filtered);
         }
