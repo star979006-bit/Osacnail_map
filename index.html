@@ -20,13 +20,14 @@
         .tag-btn { background: #e9edc9; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 14px; color: var(--text-color); }
         .tag-btn.active { background: var(--main-color); color: white; }
         .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .swiper { width: 100%; height: 350px; border-radius: 15px; margin-bottom: 15px; background: #eee; }
+        .swiper { width: 100%; height: 350px; border-radius: 15px; margin-bottom: 15px; background: #f0f0f0; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
-        .card h2 { margin: 0 0 10px 0; color: #bc6c25; font-size: 1.4em; }
+        .card h2 { margin: 0 0 10px 0; color: #bc6c25; font-size: 1.3em; }
         .info-row { font-size: 14px; margin-bottom: 8px; display: flex; align-items: flex-start; }
-        .info-row i { width: 25px; color: var(--main-color); margin-top: 3px; }
-        .info-row a { color: var(--main-color); text-decoration: none; word-break: break-all; border-bottom: 1px solid; }
-        .comment-box { background: #fefae0; padding: 15px; border-radius: 10px; border-left: 4px solid var(--main-color); margin-top: 10px; white-space: pre-wrap; font-size: 15px; color: #444; }
+        .info-row i { width: 25px; color: var(--main-color); margin-top: 4px; }
+        .btn-link { display: inline-block; background: var(--main-color); color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; margin-top: 5px; transition: 0.3s; }
+        .btn-link:active { transform: scale(0.95); opacity: 0.8; }
+        .comment-box { background: #fefae0; padding: 15px; border-radius: 10px; border-left: 4px solid var(--main-color); margin-top: 12px; white-space: pre-wrap; font-size: 14px; color: #444; }
         .time-tag { font-size: 11px; color: #a9a9a9; text-align: right; margin-top: 15px; }
     </style>
 </head>
@@ -34,16 +35,16 @@
     <div class="container">
         <header>
             <h1>Osac Nail 口袋地圖</h1>
-            <p>美甲師與妳的台南私藏清單</p>
+            <p>美甲師與妳的質感生活指南</p>
         </header>
         <div class="filter-section">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="搜尋店名、評價或標籤..." onkeyup="filterData()">
+                <input type="text" id="searchInput" placeholder="搜尋美食、美妝或好物..." onkeyup="filterData()">
                 <i class="fas fa-search"></i>
             </div>
             <div id="tagList" class="tag-cloud"></div>
         </div>
-        <div id="list">名單準備中...</div>
+        <div id="list">名單正在準備中...</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -56,18 +57,17 @@
 
         async function fetchData() {
             Papa.parse(csvUrl, {
-                download: true,
-                header: true,
+                download: true, header: true,
                 complete: function(results) {
                     allData = results.data.map(row => ({
-                        region: row['區域'],
-                        name: row['店名'],
-                        address: row['地址'],
-                        recommender: row['推薦人'],
-                        content: row['評價內容'],
+                        region: row['區域'] || '',
+                        name: row['店名'] || '',
+                        address: row['地址'] || '',
+                        recommender: row['推薦人'] || '',
+                        content: row['評價內容'] || '',
                         tags: row['標籤'] ? row['標籤'].split(/[,，]/).map(t => t.trim()) : [],
                         imgs: row['圖片網址'] ? row['圖片網址'].split(/[;；]/).map(i => i.trim()) : [],
-                        time: row['新增時間']
+                        time: row['新增時間'] || ''
                     })).filter(item => item.name);
                     renderTags();
                     renderCards(allData);
@@ -91,32 +91,45 @@
 
         function renderCards(data) {
             const list = document.getElementById('list');
-            list.innerHTML = data.length ? '' : '找不到符合條件的店家 T_T';
+            list.innerHTML = data.length ? '' : '找不到符合條件的項目 T_T';
             data.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'card';
                 let swiperHtml = '';
                 if (item.imgs.length > 0 && item.imgs[0] !== "") {
                     swiperHtml = `<div class="swiper swiper-${index}"><div class="swiper-wrapper">` +
-                        item.imgs.map(img => `<div class="swiper-slide"><img src="${img}" onerror="this.src='https://placehold.co/600x400?text=No+Image'"></div>`).join('') +
-                        `</div><div class="swiper-pagination"></div><div class="swiper-button-next" style="color:#fff"></div><div class="swiper-button-prev" style="color:#fff"></div></div>`;
+                        item.imgs.map(img => `<div class="swiper-slide"><img src="${img}" onerror="this.src='https://placehold.co/600x400?text=Osac+Nail'"></div>`).join('') +
+                        `</div><div class="swiper-pagination"></div></div>`;
                 }
-                const addr = item.address.startsWith('http') ? `<a href="${item.address}" target="_blank">點我開啟地圖</a>` : item.address;
-                card.innerHTML = `${swiperHtml}<h2>${item.name}</h2><div class="info-row"><i class="fas fa-map-marker-alt"></i><span>${addr}</span></div><div class="info-row"><i class="fas fa-user-heart"></i><span>推薦人：${item.recommender}</span></div><div class="comment-box">${item.content}</div><div class="time-tag">📅 更新：${item.time}</div>`;
+
+                // --- 智慧按鈕文字判斷 ---
+                let btnText = "點我開啟地圖";
+                let icon = "fa-map-marker-alt";
+                const shoppingKeywords = ["好物", "美妝", "推薦", "網購", "撒錢"];
+                const shoppingSites = ["shopee", "momo", "pinkoi", "pcstore", "buy"];
+
+                const isShoppingRegion = shoppingKeywords.some(k => item.region.includes(k));
+                const isShoppingUrl = shoppingSites.some(s => item.address.toLowerCase().includes(s));
+
+                if (isShoppingRegion || isShoppingUrl) {
+                    btnText = "撒錢連結這邊請 (慎點";
+                    icon = "fa-shopping-cart";
+                }
+
+                const linkHtml = item.address.startsWith('http') ? 
+                    `<a href="${item.address}" target="_blank" class="btn-link"><i class="fas ${icon}"></i> ${btnText}</a>` : 
+                    `<span>${item.address}</span>`;
+
+                card.innerHTML = `${swiperHtml}<h2>${item.name}</h2><div class="info-row"><i class="fas ${icon}"></i>${linkHtml}</div><div class="info-row"><i class="fas fa-user-heart"></i><span>推薦人：${item.recommender}</span></div><div class="comment-box">${item.content}</div><div class="time-tag">📅 更新：${item.time}</div>`;
                 list.appendChild(card);
-                if (item.imgs.length > 1) {
-                    new Swiper(`.swiper-${index}`, { 
-                        pagination: { el: '.swiper-pagination', clickable: true },
-                        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
-                    });
-                }
+                if (item.imgs.length > 1) { new Swiper(`.swiper-${index}`, { pagination: { el: '.swiper-pagination', clickable: true } }); }
             });
         }
 
         function filterData() {
             const term = document.getElementById('searchInput').value.toLowerCase();
             const filtered = allData.filter(item => {
-                const matchSearch = item.name.toLowerCase().includes(term) || (item.content && item.content.toLowerCase().includes(term));
+                const matchSearch = item.name.toLowerCase().includes(term) || item.content.toLowerCase().includes(term);
                 const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => [item.region, ...item.tags].includes(t));
                 return matchSearch && matchTags;
             });
