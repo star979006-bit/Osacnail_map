@@ -3,247 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>osac_nail2024 口袋名單</title>
+    <title>osac_nail2024</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         :root { 
-            --bg-color: #fcf8e3; 
-            --card-bg: #ffffff; 
-            --accent-color: #d4a373; 
-            --text-main: #9c846b; 
-            --tag-bg: #e9edc9; 
-            --tag-text: #606c38;
+            --main-color: #d4a373; 
+            --bg-color: #fefae0; 
+            --text-color: #606c38;
+            --beauty-color: #ffafcc; 
+            --goody-color: #a2d2ff;
         }
+        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.6; }
+        .container { max-width: 600px; margin: 0 auto; }
         
-        body { 
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; 
-            background-color: var(--bg-color); 
-            color: var(--text-main); 
-            margin: 0; 
-            padding: 15px; 
-            display: flex;
-            justify-content: center;
-        }
-
-        .container { width: 100%; max-width: 400px; overflow-x: hidden; }
-
-        /* --- 修正後的置中標題區塊 --- */
-        .profile-section {
-            display: flex;
-            flex-direction: column; /* 改為垂直排列 */
-            align-items: center;    /* 水平置中 */
-            text-align: center;     /* 文字置中 */
-            padding: 30px 5px 20px;
-        }
-        .profile-img {
-            width: 120px;           /* 加大頭貼 */
-            height: 120px;
-            border-radius: 50%;
-            background-color: #fff;
-            /* 這裡會抓妳 images 資料夾裡的 profile.jpg */
-            background-image: url('https://raw.githubusercontent.com/star979006-bit/Osacnail_map/main/images/profile.jpg');
-            background-size: cover;
-            background-position: center;
-            border: 6px solid white;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-            margin-bottom: 15px;    /* 與文字的間距 */
-            flex-shrink: 0;
-        }
-        .profile-info h1 { 
-            margin: 0; 
-            font-size: 28px;        /* 字體加大 */
-            color: var(--accent-color); 
-            letter-spacing: 1px; 
-            font-weight: bold;
-        }
-        .profile-info p { 
-            margin: 8px 0 0; 
-            font-size: 16px;        /* 副標題加大 */
-            opacity: 0.85; 
-        }
-
-        /* 搜尋區塊 */
-        .search-card {
-            background: var(--card-bg);
-            border-radius: 25px;
-            padding: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.03);
-            margin-bottom: 25px;
-            box-sizing: border-box;
-            width: 100%;
-        }
-        .search-box { position: relative; width: 100%; box-sizing: border-box; }
-        .search-box input {
-            width: 100%;
-            padding: 12px 40px 12px 18px;
-            border: 1.5px solid #f2f2f2;
-            border-radius: 20px;
-            outline: none;
-            font-size: 16px;
-            color: var(--text-main);
-            box-sizing: border-box;
-            background: #fafafa;
-        }
-        .search-box i { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--accent-color); }
-        
-        .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
-        .tag-btn { 
-            background: var(--tag-bg); 
-            border: none; 
-            padding: 6px 14px; 
-            border-radius: 18px; 
-            font-size: 13px; 
-            color: var(--tag-text);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .tag-btn.active { background: var(--accent-color); color: white; }
-        .more-tags { font-size: 12px; color: var(--accent-color); text-align: right; margin-top: 12px; cursor: pointer; }
-
-        /* 店家卡片 */
-        .shop-card {
-            background: var(--card-bg);
-            border-radius: 35px 35px 25px 25px;
-            overflow: hidden;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.04);
+        /* --- 調整後的 Header 佈局 --- */
+        header { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; /* 整體置中 */
+            gap: 20px; /* 頭貼與文字之間的間距 */
             margin-bottom: 30px;
-            width: 100%;
-            box-sizing: border-box;
+            text-align: left; /* 文字靠左對齊 */
         }
-        .shop-img { width: 92%; margin: 18px 4% 10px; border-radius: 22px; object-fit: cover; max-height: 320px; display: block; }
-        .shop-content { padding: 0 25px 25px; }
-        .shop-title { font-size: 22px; color: #bc6c25; margin: 15px 0 10px; font-weight: bold; }
-        .shop-info { font-size: 14px; margin-bottom: 6px; display: flex; align-items: center; opacity: 0.9; }
-        .shop-info i { width: 20px; margin-right: 8px; color: var(--accent-color); }
-        .shop-info a { color: inherit; text-decoration: none; border-bottom: 1px solid #eee; }
         
-        .shop-tags { margin: 15px 0; display: flex; flex-wrap: wrap; gap: 6px; }
-        .shop-tags span { font-size: 11px; background: #f8f8f8; padding: 4px 10px; border-radius: 12px; color: #888; border: 1px solid #eee; }
-
-        .comment-quote {
-            background: #fafaf5;
-            padding: 15px;
-            border-radius: 15px;
-            font-size: 15px;
-            line-height: 1.6;
-            margin-top: 15px;
-            color: #555;
-            border-left: 4px solid var(--accent-color);
+        .avatar { 
+            width: 90px; 
+            height: 90px; 
+            border-radius: 50%; 
+            border: 3px solid white; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            object-fit: cover;
+            flex-shrink: 0; /* 防止圖片被擠壓 */
         }
-        .update-time { font-size: 11px; text-align: right; margin-top: 12px; color: #ccc; }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .social-link { margin-bottom: 2px; }
+        .social-link a { color: #e1306c; font-size: 18px; text-decoration: none; }
+        
+        h1 { color: var(--main-color); margin: 0; font-size: 24px; font-weight: bold; line-height: 1.2; }
+        .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.8; }
+        
+        /* 搜尋與標籤區 */
+        .filter-section { background: #fff; padding: 15px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .search-box { position: relative; margin-bottom: 15px; }
+        .search-box input { width: 100%; padding: 12px 15px; border: 2px solid #e9edc9; border-radius: 25px; box-sizing: border-box; outline: none; }
+        
+        .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 45px; transition: max-height 0.3s; }
+        .tag-cloud.expanded { max-height: 1000px; }
+        .tag-btn { background: #e9edc9; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 13px; }
+        .tag-btn.active { background: var(--main-color); color: white; }
+        .toggle-tags-btn { text-align: right; font-size: 12px; color: var(--main-color); cursor: pointer; margin-top: 5px; font-weight: bold; }
+
+        /* 卡片樣式 */
+        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--main-color); }
+        .card.beauty { border-top-color: var(--beauty-color); }
+        .card.goody { border-top-color: var(--goody-color); }
+        
+        .swiper { width: 100%; height: 350px; border-radius: 15px; margin-bottom: 15px; }
+        .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .btn-link { display: inline-block; background: var(--main-color); color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; margin-top: 5px; }
+        .beauty .btn-link { background: var(--beauty-color); }
+        .goody .btn-link { background: var(--goody-color); }
+        
+        .comment-box { background: #fefae0; padding: 15px; border-radius: 10px; border-left: 4px solid var(--main-color); margin-top: 12px; font-size: 14px; }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="profile-section">
-        <div class="profile-img"></div>
-        <div class="profile-info">
-            <h1>osac_nail2024</h1>
-            <p>一群小女生的口袋名單</p>
-        </div>
-    </div>
-
-    <div class="search-card">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="搜尋美食、美妝或好物..." onkeyup="filterData()">
-            <i class="fas fa-search"></i>
-        </div>
-        <div id="tagList" class="tag-cloud"></div>
-        <div class="more-tags">更多標籤...</div>
-    </div>
-
-    <div id="list">同步中...</div>
-</div>
-
-<script>
-    const sheetID = "1SzMD4N7G66Iu3OnlX5POVTi-45hRsPBk_50B6CwyjZQ";
-    const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv`;
-
-    let allData = [];
-    let activeTags = new Set();
-
-    async function fetchData() {
-        try {
-            const response = await fetch(csvUrl);
-            const data = await response.text();
-            const rows = data.split(/\r?\n/).filter(line => line.trim() !== "");
+    <div class="container">
+        <header>
+            <img src="https://github.com/star979006-bit/Osacnail_map/blob/main/images/69DDDCFE-1088-4783-A970-6C825AAB9AE2.png?raw=true" class="avatar" alt="Logo">
             
-            allData = rows.slice(1).map(row => {
-                const cols = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
-                const clean = cols.map(c => c.replace(/^"|"$/g, '').trim());
-                return {
-                    region: clean[0] || "",
-                    name: clean[1] || "",
-                    address: clean[2] || "",
-                    recommender: clean[3] || "",
-                    content: clean[4] || "",
-                    tags: clean[5] ? clean[5].split(/[,，]/).map(t => t.trim()) : [],
-                    img: clean[6] || "",
-                    time: clean[7] || ""
-                };
-            }).filter(item => item.name);
-            renderTags();
-            renderCards(allData);
-        } catch (e) { document.getElementById('list').innerHTML = "資料同步中..."; }
-    }
-
-    function renderTags() {
-        const tags = new Set();
-        allData.forEach(item => { if(item.region) tags.add(item.region); item.tags.forEach(t => tags.add(t)); });
-        const tagList = document.getElementById('tagList');
-        tagList.innerHTML = '';
-        Array.from(tags).slice(0, 8).forEach(tag => {
-            const btn = document.createElement('button');
-            btn.className = 'tag-btn';
-            btn.innerText = tag;
-            btn.onclick = () => { btn.classList.toggle('active'); toggleTag(tag); };
-            tagList.appendChild(btn);
-        });
-    }
-
-    function toggleTag(tag) {
-        if (activeTags.has(tag)) activeTags.delete(tag); else activeTags.add(tag);
-        filterData();
-    }
-
-    function renderCards(data) {
-        const list = document.getElementById('list');
-        list.innerHTML = data.length ? '' : '<p style="text-align:center; padding:20px;">找不到項目 T_T</p>';
-        data.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'shop-card';
-            const rawImg = item.img.includes('github.com') ? item.img.replace('/blob/', '/raw/').split('?')[0] : item.img;
-            const addressHtml = item.address.startsWith('http') ? `<a href="${item.address}" target="_blank">點我看地圖</a>` : item.address;
-            
-            card.innerHTML = `
-                ${item.img ? `<img src="${rawImg}" class="shop-img" onerror="this.style.display='none'">` : ''}
-                <div class="shop-content">
-                    <div class="shop-title">${item.name}</div>
-                    <div class="shop-info"><i class="fas fa-map-marker-alt"></i><span>${addressHtml}</span></div>
-                    <div class="shop-info"><i class="fas fa-smile"></i><span>推薦：${item.recommender}</span></div>
-                    <div class="shop-tags">${item.tags.map(t => `<span>#${t}</span>`).join('')}</div>
-                    <div class="comment-quote">
-                        ${item.content}
-                        <div class="update-time">📅 ${item.time}</div>
-                    </div>
+            <div class="header-text">
+                <div class="social-link">
+                    <a href="https://www.instagram.com/osac_nail/" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
                 </div>
-            `;
-            list.appendChild(card);
-        });
-    }
+                <h1>osac_nail2024</h1>
+                <p class="subtitle">一群小女生的口袋名單</p>
+            </div>
+        </header>
 
-    function filterData() {
-        const term = document.getElementById('searchInput').value.toLowerCase().trim();
-        const filtered = allData.filter(item => {
-            const searchPool = `${item.name} ${item.content} ${item.region} ${item.tags.join(' ')}`.toLowerCase();
-            const matchesSearch = term === "" || searchPool.includes(term);
-            const matchesTags = activeTags.size === 0 || Array.from(activeTags).every(t => [item.region, ...item.tags].includes(t));
-            return matchesSearch && matchesTags;
-        });
-        renderCards(filtered);
-    }
-    fetchData();
-</script>
+        <div class="filter-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜尋店名或評價..." onkeyup="filterData()">
+            </div>
+            <div id="tagList" class="tag-cloud"></div>
+            <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
+        </div>
+
+        <div id="list">讀取中...</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script>
+        const sheetID = "1SzMD4N7G66Iu3OnlX5POVTi-45hRsPBk_50B6CwyjZQ";
+        const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv`;
+        let allData = [];
+        let activeTags = new Set();
+
+        async function fetchData() {
+            Papa.parse(csvUrl, {
+                download: true, header: true,
+                complete: function(results) {
+                    allData = results.data.map(row => ({
+                        region: row['區域'] || '', name: row['店名'] || '', address: row['地址'] || '',
+                        recommender: row['推薦人'] || '', content: row['評價內容'] || '',
+                        tags: row['標籤'] ? row['標籤'].split(/[,，]/).map(t => t.trim()) : [],
+                        imgs: row['圖片網址'] ? row['圖片網址'].split(/[;；]/).map(i => i.trim()) : [],
+                        time: row['新增時間'] || ''
+                    })).filter(item => item.name);
+                    renderTags();
+                    renderCards(allData);
+                }
+            });
+        }
+
+        function renderTags() {
+            const tags = new Set();
+            allData.forEach(item => { if(item.region) tags.add(item.region); item.tags.forEach(t => { if(t) tags.add(t); }); });
+            const tagList = document.getElementById('tagList');
+            tagList.innerHTML = '';
+            tags.forEach(tag => {
+                const btn = document.createElement('button');
+                btn.className = 'tag-btn';
+                btn.innerText = tag;
+                btn.onclick = () => { btn.classList.toggle('active'); activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag); filterData(); };
+                tagList.appendChild(btn);
+            });
+        }
+
+        function toggleTags() {
+            const cloud = document.getElementById('tagList');
+            cloud.classList.toggle('expanded');
+            document.getElementById('toggleBtn').innerText = cloud.classList.contains('expanded') ? "收合標籤" : "更多標籤...";
+        }
+
+        function renderCards(data) {
+            const list = document.getElementById('list');
+            list.innerHTML = '';
+            data.forEach((item, index) => {
+                let typeClass = "";
+                if (item.region.includes("美妝")) typeClass = "beauty";
+                else if (item.region.includes("好物")) typeClass = "goody";
+
+                const card = document.createElement('div');
+                card.className = `card ${typeClass}`;
+                
+                let swiperHtml = '';
+                if (item.imgs.length > 0 && item.imgs[0]) {
+                    swiperHtml = `<div class="swiper swiper-${index}"><div class="swiper-wrapper">` +
+                        item.imgs.map(img => `<div class="swiper-slide"><img src="${img}" onerror="this.src='https://placehold.co/600x400?text=No+Image'"></div>`).join('') +
+                        `</div><div class="swiper-pagination"></div></div>`;
+                }
+
+                card.innerHTML = `
+                    ${swiperHtml}
+                    <h2>${item.name}</h2>
+                    <div class="info-row"><a href="${item.address}" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> 查看連結/地圖</a></div>
+                    <div class="info-row"><strong>推薦人：</strong>${item.recommender}</div>
+                    <div class="comment-box">${item.content}</div>
+                `;
+                list.appendChild(card);
+                if (item.imgs.length > 1) new Swiper(`.swiper-${index}`, { pagination: { el: '.swiper-pagination' } });
+            });
+        }
+
+        function filterData() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allData.filter(item => {
+                const matchSearch = item.name.toLowerCase().includes(term) || item.content.toLowerCase().includes(term);
+                const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => [item.region, ...item.tags].includes(t));
+                return matchSearch && matchTags;
+            });
+            renderCards(filtered);
+        }
+        fetchData();
+    </script>
 </body>
 </html>
