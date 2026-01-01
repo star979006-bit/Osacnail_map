@@ -17,24 +17,24 @@
         body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.6; }
         .container { max-width: 600px; margin: 0 auto; }
         
-        /* --- 調整後的 Header 佈局 --- */
+        /* --- 放大後的 Header 佈局 (約佔 1/3 螢幕高度) --- */
         header { 
             display: flex; 
             align-items: center; 
-            justify-content: center; /* 整體置中 */
-            gap: 20px; /* 頭貼與文字之間的間距 */
-            margin-bottom: 30px;
-            text-align: left; /* 文字靠左對齊 */
+            justify-content: center; 
+            gap: 25px; 
+            padding: 40px 10px; /* 增加上下間距讓比例更大 */
+            text-align: left;
         }
         
         .avatar { 
-            width: 90px; 
-            height: 90px; 
+            width: 120px; /* 頭貼放大 */
+            height: 120px; 
             border-radius: 50%; 
-            border: 3px solid white; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 4px solid white; 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
             object-fit: cover;
-            flex-shrink: 0; /* 防止圖片被擠壓 */
+            flex-shrink: 0;
         }
 
         .header-text {
@@ -42,63 +42,101 @@
             flex-direction: column;
         }
 
-        .social-link { margin-bottom: 2px; }
-        .social-link a { color: #e1306c; font-size: 18px; text-decoration: none; }
+        /* 標題直接變連結 */
+        .header-text h1 a { 
+            color: var(--main-color); 
+            text-decoration: none; 
+            font-size: 32px; /* 標題放大 */
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
         
-        h1 { color: var(--main-color); margin: 0; font-size: 24px; font-weight: bold; line-height: 1.2; }
-        .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.8; }
-        
+        .subtitle { 
+            margin: 5px 0 0 0; 
+            font-size: 18px; /* 副標題放大 */
+            font-weight: 500;
+            color: var(--text-color);
+            opacity: 0.9;
+        }
+
+        /* --- 右下角懸浮 IG 追蹤按鈕 --- */
+        .floating-ig {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            z-index: 999;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 30px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            font-size: 14px;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        .floating-ig:active { transform: scale(0.9); }
+
         /* 搜尋與標籤區 */
-        .filter-section { background: #fff; padding: 15px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .search-box { position: relative; margin-bottom: 15px; }
-        .search-box input { width: 100%; padding: 12px 15px; border: 2px solid #e9edc9; border-radius: 25px; box-sizing: border-box; outline: none; }
+        .filter-section { background: #fff; padding: 18px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .search-box input { width: 100%; padding: 12px 15px; border: 2px solid #e9edc9; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 16px; }
         
-        .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 45px; transition: max-height 0.3s; }
+        .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 48px; transition: max-height 0.3s; margin-top: 10px;}
         .tag-cloud.expanded { max-height: 1000px; }
-        .tag-btn { background: #e9edc9; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 13px; }
+        .tag-btn { background: #e9edc9; border: none; padding: 6px 14px; border-radius: 15px; cursor: pointer; font-size: 14px; color: var(--text-color); }
         .tag-btn.active { background: var(--main-color); color: white; }
-        .toggle-tags-btn { text-align: right; font-size: 12px; color: var(--main-color); cursor: pointer; margin-top: 5px; font-weight: bold; }
+        .toggle-tags-btn { text-align: right; font-size: 13px; color: var(--main-color); cursor: pointer; margin-top: 8px; font-weight: bold; }
 
         /* 卡片樣式 */
-        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--main-color); }
+        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-top: 8px solid var(--main-color); position: relative; }
         .card.beauty { border-top-color: var(--beauty-color); }
         .card.goody { border-top-color: var(--goody-color); }
         
-        .swiper { width: 100%; height: 350px; border-radius: 15px; margin-bottom: 15px; }
+        .swiper { width: 100%; height: 350px; border-radius: 15px; margin-bottom: 15px; background: #eee; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .card h2 { margin: 0 0 10px 0; color: #bc6c25; font-size: 1.4em; }
+        .info-row { font-size: 14px; margin-bottom: 8px; display: flex; align-items: flex-start; }
+        .info-row i { width: 25px; color: var(--main-color); margin-top: 4px; }
         
         .btn-link { display: inline-block; background: var(--main-color); color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 13px; margin-top: 5px; }
         .beauty .btn-link { background: var(--beauty-color); }
         .goody .btn-link { background: var(--goody-color); }
         
-        .comment-box { background: #fefae0; padding: 15px; border-radius: 10px; border-left: 4px solid var(--main-color); margin-top: 12px; font-size: 14px; }
+        .comment-box { background: #fefae0; padding: 15px; border-radius: 10px; border-left: 4px solid var(--main-color); margin-top: 12px; font-size: 15px; color: #444; white-space: pre-wrap; }
+        .beauty .comment-box { border-left-color: var(--beauty-color); }
+        .goody .comment-box { border-left-color: var(--goody-color); }
+        .time-tag { font-size: 11px; color: #a9a9a9; text-align: right; margin-top: 15px; }
     </style>
 </head>
 <body>
+
+    <a href="https://www.instagram.com/osac_nail/" class="floating-ig" target="_blank">
+        <i class="fab fa-instagram"></i> 點擊追蹤
+    </a>
+
     <div class="container">
         <header>
             <img src="https://github.com/star979006-bit/Osacnail_map/blob/main/images/69DDDCFE-1088-4783-A970-6C825AAB9AE2.png?raw=true" class="avatar" alt="Logo">
             
             <div class="header-text">
-                <div class="social-link">
-                    <a href="https://www.instagram.com/osac_nail/" target="_blank">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                </div>
-                <h1>osac_nail2024</h1>
+                <h1><a href="https://www.instagram.com/osac_nail/" target="_blank">osac_nail2024</a></h1>
                 <p class="subtitle">一群小女生的口袋名單</p>
             </div>
         </header>
 
         <div class="filter-section">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="搜尋店名或評價..." onkeyup="filterData()">
+                <input type="text" id="searchInput" placeholder="搜尋店名、評價或好物..." onkeyup="filterData()">
             </div>
             <div id="tagList" class="tag-cloud"></div>
             <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
         </div>
 
-        <div id="list">讀取中...</div>
+        <div id="list">名單準備中...</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -150,36 +188,37 @@
             const list = document.getElementById('list');
             list.innerHTML = '';
             data.forEach((item, index) => {
-                let typeClass = "";
-                if (item.region.includes("美妝")) typeClass = "beauty";
-                else if (item.region.includes("好物")) typeClass = "goody";
+                let cardClass = "card";
+                let btnText = "點我開啟地圖";
+                let icon = "fa-map-marker-alt";
+
+                if (item.region.includes("美妝")) { cardClass = "card beauty"; btnText = "撒錢連結這邊請 (慎點"; icon = "fa-shopping-cart"; }
+                else if (item.region.includes("好物")) { cardClass = "card goody"; btnText = "撒錢連結這邊請 (慎點"; icon = "fa-shopping-cart"; }
 
                 const card = document.createElement('div');
-                card.className = `card ${typeClass}`;
+                card.className = cardClass;
                 
                 let swiperHtml = '';
-                if (item.imgs.length > 0 && item.imgs[0]) {
+                if (item.imgs.length > 0 && item.imgs[0] !== "") {
                     swiperHtml = `<div class="swiper swiper-${index}"><div class="swiper-wrapper">` +
-                        item.imgs.map(img => `<div class="swiper-slide"><img src="${img}" onerror="this.src='https://placehold.co/600x400?text=No+Image'"></div>`).join('') +
+                        item.imgs.map(img => `<div class="swiper-slide"><img src="${img}" onerror="this.src='https://placehold.co/600x400?text=Osac+Nail'"></div>`).join('') +
                         `</div><div class="swiper-pagination"></div></div>`;
                 }
 
-                card.innerHTML = `
-                    ${swiperHtml}
-                    <h2>${item.name}</h2>
-                    <div class="info-row"><a href="${item.address}" target="_blank" class="btn-link"><i class="fas fa-external-link-alt"></i> 查看連結/地圖</a></div>
-                    <div class="info-row"><strong>推薦人：</strong>${item.recommender}</div>
-                    <div class="comment-box">${item.content}</div>
-                `;
+                const linkHtml = item.address.startsWith('http') ? 
+                    `<a href="${item.address}" target="_blank" class="btn-link"><i class="fas ${icon}"></i> ${btnText}</a>` : 
+                    `<span>${item.address}</span>`;
+
+                card.innerHTML = `${swiperHtml}<h2>${item.name}</h2><div class="info-row"><i class="fas ${icon}" style="color:inherit"></i>${linkHtml}</div><div class="info-row"><i class="fas fa-user-heart" style="color:inherit"></i><span>推薦人：${item.recommender}</span></div><div class="comment-box">${item.content}</div><div class="time-tag">📅 更新：${item.time}</div>`;
                 list.appendChild(card);
-                if (item.imgs.length > 1) new Swiper(`.swiper-${index}`, { pagination: { el: '.swiper-pagination' } });
+                if (item.imgs.length > 1) new Swiper(`.swiper-${index}`, { pagination: { el: '.swiper-pagination', clickable: true } });
             });
         }
 
         function filterData() {
             const term = document.getElementById('searchInput').value.toLowerCase();
             const filtered = allData.filter(item => {
-                const matchSearch = item.name.toLowerCase().includes(term) || item.content.toLowerCase().includes(term);
+                const matchSearch = item.name.toLowerCase().includes(term) || (item.content && item.content.toLowerCase().includes(term));
                 const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => [item.region, ...item.tags].includes(t));
                 return matchSearch && matchTags;
             });
