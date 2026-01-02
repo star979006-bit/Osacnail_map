@@ -8,12 +8,27 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         :root { 
-            --main-color: #d4a373; --bg-color: #fefae0; --text-color: #606c38;
-            --beauty-color: #ffafcc; --goody-color: #a2d2ff;
-            --soft-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            --main-color: #d4a373; 
+            --bg-color: #fefae0; 
+            --text-color: #606c38;
+            --beauty-color: #ffafcc; 
+            --goody-color: #a2d2ff;
+            --soft-shadow: 0 10px 30px rgba(0,0,0,0.06);
         }
-        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.8; }
-        .container { max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
+        body { 
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            margin: 0; 
+            padding: 20px 15px; /* 增加 body 左右內距 */
+            line-height: 1.8; 
+        }
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 0 10px; /* 增加容器左右空間，防止卡片貼邊 */
+            padding-bottom: 80px; 
+        }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.5s ease forwards; }
@@ -25,27 +40,25 @@
         .header-text h1 a { color: var(--main-color); text-decoration: none; font-size: 24px; font-weight: bold; }
         .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.7; white-space: nowrap; }
 
-        /* 模式切換按鈕 */
-        .mode-switch { display: flex; justify-content: center; margin-bottom: 25px; gap: 8px; flex-wrap: wrap; }
+        .mode-switch { display: flex; justify-content: center; margin-bottom: 25px; gap: 10px; }
         .mode-btn { background: white; border: 1px solid #e9edc9; color: var(--main-color); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 14px; flex: 1; min-width: 100px; text-align: center; }
         .mode-btn.active { background: var(--main-color); color: white; border-color: var(--main-color); }
 
-        /* 分類導覽樣式 */
-        .category-nav { background: #fff; padding: 20px; border-radius: 20px; box-shadow: var(--soft-shadow); margin-bottom: 20px; text-align: center; }
-        .nav-tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        .nav-item { background: #fdfdfd; border: 1px solid #eee; padding: 10px 20px; border-radius: 15px; cursor: pointer; font-size: 14px; transition: 0.2s; }
-        .nav-item:active { transform: scale(0.95); background: #f0f0f0; }
+        .filter-section { background: #fff; padding: 20px; border-radius: 20px; box-shadow: var(--soft-shadow); margin-bottom: 20px; }
+        .search-box input { width: 100%; padding: 12px 20px; border: 1px solid #eee; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 16px; background: #fafafa; margin-bottom: 15px; }
 
-        /* 搜尋與標籤雲區 */
-        .filter-section { background: #fff; padding: 18px; border-radius: 20px; box-shadow: var(--soft-shadow); margin-bottom: 20px; }
-        .search-box input { width: 100%; padding: 12px 20px; border: 1px solid #eee; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 15px; background: #fafafa; margin-bottom: 15px; }
         .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 48px; transition: max-height 0.3s; }
         .tag-cloud.expanded { max-height: 1000px; }
         .tag-btn { background: #e9edc9; border: none; padding: 6px 14px; border-radius: 15px; cursor: pointer; font-size: 13px; color: var(--text-color); }
         .tag-btn.active { background: var(--main-color); color: white; }
         .toggle-tags-btn { text-align: right; font-size: 12px; color: var(--main-color); cursor: pointer; margin-top: 8px; font-weight: bold; }
 
-        /* 卡片設定 */
+        .category-nav { background: #fff; padding: 20px; border-radius: 20px; box-shadow: var(--soft-shadow); margin-bottom: 20px; text-align: center; }
+        .nav-tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .nav-item { background: #fdfdfd; border: 1px solid #eee; padding: 12px 20px; border-radius: 15px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        .nav-item:active { transform: scale(0.95); background: #f0f0f0; }
+        .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-size: 14px; font-weight: bold; }
+
         .card { background: white; border-radius: 25px; padding: 25px; margin-bottom: 25px; box-shadow: var(--soft-shadow); border-top: 12px solid var(--main-color); position: relative; }
         .card.beauty { border-top-color: var(--beauty-color); }
         .card.goody { border-top-color: var(--goody-color); }
@@ -55,13 +68,13 @@
         .copy-icon { font-size: 14px; color: #ccc; cursor: pointer; padding: 5px; }
         .btn-link { display: inline-flex; align-items: center; background: var(--main-color); color: white !important; padding: 8px 20px; border-radius: 30px; text-decoration: none; font-size: 13.5px; font-weight: bold; gap: 8px; }
         .recommender-badge { background: #f8f1e7; color: var(--main-color); padding: 2px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
-        .comment-box { background: #fdfcf6; padding: 18px; border-radius: 15px; border-left: 3px solid var(--main-color); margin-top: 15px; font-size: 14px; color: #555; white-space: pre-wrap; }
+        .comment-box { background: #fdfcf6; padding: 18px; border-radius: 15px; border-left: 3px solid var(--main-color); margin-top: 15px; font-size: 14px; color: #555; line-height: 1.7; white-space: pre-wrap; }
         .floating-ig { position: fixed; bottom: 25px; right: 20px; z-index: 9999; background: linear-gradient(45deg, #f09433 0%, #bc1888 100%); color: white; padding: 10px 20px; border-radius: 50px; text-decoration: none; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); font-size: 14px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <a href="https://www.instagram.com/osac_nail2024" class="floating-ig" target="_blank">
+    <a href="https://www.instagram.com/osac_nail2024?igsh=MWtpcmwzeGJqNmE2OQ%3D%3D&utm_source=qr" class="floating-ig" target="_blank">
         <i class="fab fa-instagram"></i> 點擊追蹤
     </a>
 
@@ -69,7 +82,7 @@
         <header>
             <img src="https://github.com/star979006-bit/Osacnail_map/blob/main/images/69DDDCFE-1088-4783-A970-6C825AAB9AE2.png?raw=true" class="avatar">
             <div class="header-text">
-                <h1><a href="https://www.instagram.com/osac_nail2024" target="_blank">osac_nail2024</a></h1>
+                <h1><a href="https://www.instagram.com/osac_nail2024?igsh=MWtpcmwzeGJqNmE2OQ%3D%3D&utm_source=qr" target="_blank">osac_nail2024</a></h1>
                 <p class="subtitle">一群小女生的口袋名單</p>
             </div>
         </header>
@@ -83,7 +96,7 @@
         <div id="searchView" class="view fade-in">
             <div class="filter-section">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="搜尋店名或評價..." onkeyup="filterData()">
+                    <input type="text" id="searchInput" placeholder="搜尋店名、評價、標籤..." oninput="filterData()">
                 </div>
                 <div id="tagList" class="tag-cloud"></div>
                 <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
@@ -97,7 +110,7 @@
             </div>
         </div>
 
-        <div id="list" class="fade-in">正在載入清單...</div>
+        <div id="list" class="fade-in">正在準備清單...</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -153,8 +166,9 @@
                 btn.className = `tag-btn ${activeTags.has(tag) ? 'active' : ''}`;
                 btn.innerText = tag;
                 btn.onclick = () => { 
-                    activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag); 
-                    btn.classList.toggle('active');
+                    if(activeTags.has(tag)) activeTags.delete(tag);
+                    else activeTags.add(tag);
+                    renderTags();
                     filterData(); 
                 };
                 tagList.appendChild(btn);
@@ -216,7 +230,7 @@
         function filterData() {
             const term = document.getElementById('searchInput').value.toLowerCase();
             const filtered = allData.filter(item => {
-                const matchSearch = item.name.toLowerCase().includes(term) || item.content.toLowerCase().includes(term);
+                const matchSearch = item.name.toLowerCase().includes(term) || item.content.toLowerCase().includes(term) || item.tags.some(t => t.toLowerCase().includes(term));
                 const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
                 return matchSearch && matchTags;
             });
