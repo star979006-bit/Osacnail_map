@@ -80,7 +80,7 @@
         <div id="searchView" class="view active">
             <div class="filter-section">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="試試輸入：台南 早午餐..." oninput="filterData()">
+                    <input type="text" id="searchInput" placeholder="搜尋台南 蛋糕..." oninput="filterData()">
                 </div>
                 <div id="tagList" class="tag-cloud"></div>
                 <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
@@ -94,7 +94,7 @@
             </div>
         </div>
 
-        <div id="list">正在準備清單...</div>
+        <div id="list">正在準備精選清單...</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -119,8 +119,8 @@
                         return {
                             rawRegion, name, content, tags,
                             regionLevels: rawRegion.split('-').map(s => s.trim()),
-                            // 重點：把所有欄位攤平到一個搜尋用的長字串
-                            fullSearchText: (name + content + tags.join('') + rawRegion).toLowerCase().replace(/\s+/g, ''),
+                            // 重點：將所有文字攤平並移除所有空格進行極限模糊比對
+                            searchPool: (name + content + tags.join('') + rawRegion).toLowerCase().replace(/\s/g, ''),
                             address: row['地址'] || '', recommender: row['推薦人'] || '',
                             imgs: row['圖片網址'] ? row['圖片網址'].split(/[;；]/).map(i => i.trim()) : []
                         };
@@ -169,13 +169,17 @@
         }
 
         function filterData() {
-            const input = document.getElementById('searchInput').value.toLowerCase().trim();
-            // 終極修復：將輸入內容按空格切開
-            const searchWords = input.split(/\s+/).filter(w => w !== "");
+            const input = document.getElementById('searchInput').value.toLowerCase().replace(/\s/g, ''); // 移除搜尋輸入的所有空格
+            
+            // 如果沒輸入，顯示全部
+            if (input === "" && activeTags.size === 0) {
+                renderCards(allData);
+                return;
+            }
 
             const filtered = allData.filter(item => {
-                // 必須「同時」包含所有輸入的詞
-                const matchSearch = searchWords.every(word => item.fullSearchText.includes(word));
+                // 模糊搜尋：檢查輸入的每一個字是否都出現在 searchPool 中
+                const matchSearch = input.split('').every(char => item.searchPool.includes(char));
                 const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
                 return matchSearch && matchTags;
             });
