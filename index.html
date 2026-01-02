@@ -57,7 +57,7 @@
 </head>
 <body>
 
-    <a href="https://www.instagram.com/osac_nail2024?igsh=MWtpcmwzeGJqNmE2OQ%3D%3D&utm_source=qr" class="floating-ig" target="_blank">
+    <a href="https://www.instagram.com/osac_nail2024" class="floating-ig" target="_blank">
         <i class="fab fa-instagram"></i> 點擊追蹤
     </a>
 
@@ -65,7 +65,7 @@
         <header>
             <img src="https://github.com/star979006-bit/Osacnail_map/blob/main/images/69DDDCFE-1088-4783-A970-6C825AAB9AE2.png?raw=true" class="avatar">
             <div class="header-text">
-                <h1><a href="https://www.instagram.com/osac_nail2024?igsh=MWtpcmwzeGJqNmE2OQ%3D%3D&utm_source=qr" target="_blank">osac_nail2024</a></h1>
+                <h1><a href="https://www.instagram.com/osac_nail2024" target="_blank">osac_nail2024</a></h1>
                 <p class="subtitle">一群小女生的口袋名單</p>
             </div>
         </header>
@@ -79,7 +79,7 @@
         <div id="searchView" class="view fade-in">
             <div class="filter-section">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="例如：台南早午餐" onkeyup="filterData()">
+                    <input type="text" id="searchInput" placeholder="搜尋地區、店名、或好物..." onkeyup="filterData()">
                 </div>
                 <div id="tagList" class="tag-cloud"></div>
                 <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
@@ -187,7 +187,7 @@
         function goBack() { currentPath.pop(); renderNav(); }
 
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => { alert('已複製: ' + text); });
+            navigator.clipboard.writeText(text).then(() => { alert('已複製名稱: ' + text); });
         }
 
         function renderCards(data) {
@@ -209,55 +209,40 @@
             });
         }
 
-        /* --- 核心修復：智慧拆分搜尋引擎 --- */
+        /* --- 優化後的搜尋邏輯：兼顧單字與組合 --- */
         function filterData() {
             const rawTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            
-            // 關鍵：將輸入文字先嘗試按空格拆分，如果沒空格，我們手動幫它判斷
-            // 這裡我使用了一套邏輯：如果輸入太長且沒空格，我們會嘗試匹配「包含所有子字串」
-            let terms = rawTerm.split(/\s+/).filter(t => t !== "");
-
             const filtered = allData.filter(item => {
                 const searchText = (item.name + item.content + item.rawRegion + item.tags.join('')).toLowerCase();
                 
-                // 如果用戶輸入「台南早午餐」，我們檢查這條資料是否同時包含「台南」和「早午餐」
-                // 我們假設只要資料中出現了用戶輸入的所有「意圖字眼」就算匹配
+                // 1. 如果輸入是空的，直接檢查標籤
+                if (rawTerm === "") {
+                    return activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
+                }
+
+                // 2. 如果有輸入文字，我們檢查是否包含「所有」輸入的片段（無論有沒有空格）
+                // 這裡我們把常見的地點（台南、台中）跟類別（早午餐）做智慧匹配
+                let isMatch = false;
                 
-                // 1. 如果有空格，按空格邏輯跑
-                if (terms.length > 1) {
-                    return terms.every(term => searchText.includes(term));
-                } 
+                // 先檢查完整包含 (例如打 "台中" 或 "早午餐")
+                if (searchText.includes(rawTerm)) {
+                    isMatch = true;
+                } else {
+                    // 如果不包含完整字串，嘗試自動拆分關鍵字（例如用戶打 "台中早午餐"）
+                    // 我們檢查資料是否同時包含 "台中" 以及 "早午餐"
+                    // 這裡簡單使用：只要資料裡能找到這個詞的所有字符組合即可
+                    const keywords = ["台中", "台南", "台北", "高雄", "日本", "東京", "早午餐", "甜點", "咖啡", "美妝", "美甲"];
+                    let matchedKeywords = keywords.filter(k => rawTerm.includes(k.toLowerCase()));
+                    
+                    if (matchedKeywords.length > 1) {
+                        isMatch = matchedKeywords.every(k => searchText.includes(k.toLowerCase()));
+                    }
+                }
                 
-                // 2. 如果沒空格（如：台南早午餐），我們做更寬鬆的模糊匹配
-                // 檢查資料是否包含整串文字，或者嘗試拆分常見組合（這邊透過標籤自動匹配提升準確度）
-                const matchFull = searchText.includes(rawTerm);
+                // 3. 同時要符合已選取的標籤
                 const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
                 
-                // 特別處理：如果沒空格但長度大於 4，嘗試檢查是否包含地區和標籤的組合
-                let fuzzyMatch = false;
-                if (!matchFull && rawTerm.length >= 3) {
-                   // 檢查是否包含「台南」且包含「早午餐」（假設資料中有這些字眼）
-                   // 這裡透過迴圈去資料裡的 regionLevels 和 tags 比對，看能不能湊出用戶打的字
-                   const combinedInfo = (item.rawRegion + item.tags.join('')).toLowerCase();
-                   // 如果用戶打的東西，有一部分在地區，一部分在標籤，也給過
-                   // 簡單化處理：直接檢查 rawTerm 是否被拆解後存在於資料中
-                   // (此處邏輯已優化為：只要 searchText 包含用戶輸入的各個部分即可)
-                   // 為簡單起見，我們讓程式直接支持「台南早午餐」這種無空格輸入的自動拆解
-                }
-
-                // 最終強化的簡易邏輯：即使沒空格，如果資料中包含這幾個關鍵字組合，就顯示
-                // 我們遍歷資料庫的所有標籤，看用戶輸入裡有沒有包含這些標籤
-                let smartMatch = matchFull;
-                if(!smartMatch) {
-                    let foundCount = 0;
-                    // 檢查區域
-                    item.regionLevels.forEach(loc => { if(rawTerm.includes(loc.toLowerCase())) foundCount++; });
-                    // 檢查標籤
-                    item.tags.forEach(tag => { if(rawTerm.includes(tag.toLowerCase())) foundCount++; });
-                    if(foundCount >= 2) smartMatch = true; // 命中兩個以上分類
-                }
-
-                return (smartMatch) && matchTags;
+                return isMatch && matchTags;
             });
             renderCards(filtered);
         }
