@@ -13,7 +13,7 @@
             --soft-shadow: 0 10px 30px rgba(0,0,0,0.04);
             --btn-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.8; }
+        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.8; scroll-behavior: smooth; }
         .container { max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -24,32 +24,21 @@
         .header-text { display: flex; flex-direction: column; text-align: left; }
         .header-text h1 { margin: 0; }
         .header-text h1 a { color: var(--main-color); text-decoration: none; font-size: 24px; font-weight: bold; letter-spacing: 1px; }
-        .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.7; white-space: nowrap; }
+        .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.8; white-space: nowrap; }
 
         .mode-switch { display: flex; justify-content: center; margin-bottom: 25px; gap: 8px; flex-wrap: wrap; }
         .mode-btn { background: white; border: 1px solid #e9edc9; color: var(--main-color); padding: 10px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 14px; flex: 1; min-width: 100px; text-align: center; box-shadow: var(--btn-shadow); }
         .mode-btn.active { background: var(--main-color); color: white; border-color: var(--main-color); }
 
         .category-nav { background: #fff; padding: 20px; border-radius: 20px; box-shadow: var(--soft-shadow); margin-bottom: 20px; text-align: center; }
+        .nav-title { display: block; margin-bottom: 15px; font-weight: bold; font-size: 16px; color: var(--main-color); }
         .nav-tags { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; justify-content: center; }
         .nav-item { background: white; border: 1px solid #eee; padding: 15px 10px; border-radius: 15px; cursor: pointer; font-size: 15px; font-weight: 500; transition: 0.2s; box-shadow: var(--btn-shadow); display: flex; align-items: center; justify-content: center; gap: 5px; }
         .nav-item:active { transform: scale(0.95); background: var(--bg-color); }
         .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-size: 14px; font-weight: bold; }
 
-        /* --- 修正寬度後的搜尋與篩選區 --- */
         .filter-section { background: #fff; padding: 15px; border-radius: 15px; box-shadow: var(--soft-shadow); margin-bottom: 20px; box-sizing: border-box; }
-        .search-box { width: 100%; }
-        .search-box input { 
-            width: 100%; 
-            padding: 12px 15px; 
-            border: 2px solid #e9edc9; 
-            border-radius: 25px; 
-            box-sizing: border-box; /* 確保寬度包含 Padding */
-            outline: none; 
-            font-size: 14px; 
-            display: block;
-            margin-bottom: 12px; 
-        }
+        .search-box input { width: 100%; padding: 12px 15px; border: 2px solid #e9edc9; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 14px; display: block; margin-bottom: 12px; }
         
         .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 48px; transition: max-height 0.3s; }
         .tag-cloud.expanded { max-height: 1000px; }
@@ -67,21 +56,30 @@
         .btn-link { display: inline-flex; align-items: center; background: var(--main-color); color: white !important; padding: 8px 20px; border-radius: 30px; text-decoration: none; font-size: 13.5px; font-weight: bold; gap: 8px; }
         .recommender-badge { background: #f8f1e7; color: var(--main-color); padding: 2px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
         .comment-box { background: #fdfcf6; padding: 18px; border-radius: 10px; border-left: 3px solid var(--main-color); margin-top: 15px; font-size: 14px; color: #555; line-height: 1.8; white-space: pre-wrap; }
-        .floating-ig { position: fixed; bottom: 25px; right: 20px; z-index: 9999; background: linear-gradient(45deg, #f09433 0%, #bc1888 100%); color: white; padding: 10px 20px; border-radius: 50px; text-decoration: none; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); font-size: 14px; font-weight: bold; }
+
+        .action-buttons { position: fixed; bottom: 25px; right: 20px; z-index: 9999; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+        .floating-ig { background: linear-gradient(45deg, #f09433 0%, #bc1888 100%); color: white; padding: 10px 20px; border-radius: 50px; text-decoration: none; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); font-size: 14px; font-weight: bold; }
+        .back-to-top { background: white; color: var(--main-color); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; border: 1px solid #eee; transition: 0.3s; opacity: 0; visibility: hidden; }
+        .back-to-top.show { opacity: 1; visibility: visible; }
     </style>
 </head>
 <body>
 
-    <a href="https://www.instagram.com/osac_nail2024?igsh=MWtpcmwzeGJqNmE2OQ%3D%3D&utm_source=qr" class="floating-ig" target="_blank">
-        <i class="fab fa-instagram"></i> 點擊追蹤
-    </a>
+    <div class="action-buttons">
+        <div id="backToTop" class="back-to-top" onclick="window.scrollTo(0,0)">
+            <i class="fas fa-chevron-up"></i>
+        </div>
+        <a href="https://www.instagram.com/osac_nail2024?igsh=MWtpcmwzeGJqNmE2OQ%3D%3D&utm_source=qr" class="floating-ig" target="_blank">
+            <i class="fab fa-instagram"></i> 點擊追蹤
+        </a>
+    </div>
 
     <div class="container">
         <header>
             <img src="https://github.com/star979006-bit/Osacnail_map/blob/main/images/69DDDCFE-1088-4783-A970-6C825AAB9AE2.png?raw=true" class="avatar">
             <div class="header-text">
                 <h1><a href="https://www.instagram.com/osac_nail2024?igsh=MWtpcmwzeGJqNmE2OQ%3D%3D&utm_source=qr" target="_blank">osac_nail2024</a></h1>
-                <p class="subtitle">一群小女生的口袋名單</p>
+                <p class="subtitle">𖤐一群小女生的口袋名單⸝⸝꙳</p>
             </div>
         </header>
 
@@ -94,7 +92,7 @@
         <div id="searchView" class="view fade-in">
             <div class="filter-section">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="搜尋店名、評價或關鍵字..." onkeyup="filterData()">
+                    <input type="text" id="searchInput" placeholder="搜尋區域、店名或評價..." onkeyup="filterData()">
                 </div>
                 <div id="tagList" class="tag-cloud"></div>
                 <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
@@ -120,6 +118,15 @@
         let activeTags = new Set();
         let currentMode = 'search';
         let currentPath = [];
+
+        window.onscroll = function() {
+            const btn = document.getElementById("backToTop");
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                btn.classList.add("show");
+            } else {
+                btn.classList.remove("show");
+            }
+        };
 
         async function fetchData() {
             Papa.parse(csvUrl, {
@@ -186,8 +193,13 @@
             currentPath.forEach((lvl, idx) => { filteredList = filteredList.filter(item => item.regionLevels[idx] === lvl); });
             let options = new Set();
             filteredList.forEach(item => { const nextLvl = item.regionLevels[currentPath.length]; if (nextLvl) options.add(nextLvl); });
+            
             let canGoBack = currentPath.length > (currentMode === 'goody' ? 1 : 0);
-            navBreadcrumb.innerHTML = canGoBack ? `<span class="back-btn" onclick="goBack()">← 返回上一層</span>` : `<span class="nav-title">請選擇類別</span>`;
+            
+            // 修改標題邏輯
+            let titleText = currentMode === 'food' ? "要去哪裡玩？" : "要買什麼勒～～？";
+            navBreadcrumb.innerHTML = canGoBack ? `<span class="back-btn" onclick="goBack()">← 返回上一層</span>` : `<span class="nav-title">${titleText}</span>`;
+            
             navContent.innerHTML = '';
             options.forEach(opt => {
                 const btn = document.createElement('div');
@@ -199,13 +211,8 @@
                 btn.onclick = () => { currentPath.push(opt); renderNav(); };
                 navContent.appendChild(btn);
             });
-            
-            // 重要修正：除了搜尋模式外，初始狀態（路徑長度為0或1[好物]）不顯示卡片
-            if (currentPath.length > (currentMode === 'goody' ? 1 : 0)) {
-                renderCards(filteredList);
-            } else {
-                renderCards([]);
-            }
+            if (currentPath.length > (currentMode === 'goody' ? 1 : 0)) renderCards(filteredList);
+            else renderCards([]);
         }
 
         function goBack() { currentPath.pop(); renderNav(); }
@@ -238,16 +245,16 @@
             const rawTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             const filtered = allData.filter(item => {
                 const searchText = (item.name + item.content + item.rawRegion + item.tags.join('')).toLowerCase();
-                let isMatch = false;
-                if (rawTerm === "") { isMatch = true; }
-                else if (searchText.includes(rawTerm)) { isMatch = true; }
-                else {
-                    const keywords = ["台中", "台南", "台北", "高雄", "日本", "東京", "早午餐", "甜點", "咖啡", "美妝", "美甲"];
-                    let matchedKeywords = keywords.filter(k => rawTerm.includes(k.toLowerCase()));
-                    if (matchedKeywords.length > 1) { isMatch = matchedKeywords.every(k => searchText.includes(k.toLowerCase())); }
+                if (rawTerm === "") return activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
+
+                // 強化智慧搜尋
+                let isMatch = searchText.includes(rawTerm);
+                if (!isMatch) {
+                    const keywords = ["台南", "台中", "台北", "高雄", "日本", "東京", "早午餐", "甜點", "咖啡", "美妝"];
+                    let parts = keywords.filter(k => rawTerm.includes(k.toLowerCase()));
+                    if (parts.length > 0) isMatch = parts.every(p => searchText.includes(p.toLowerCase()));
                 }
-                const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
-                return isMatch && matchTags;
+                return isMatch && (activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t)));
             });
             renderCards(filtered);
         }
