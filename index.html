@@ -13,146 +13,99 @@
             --text-color: #606c38;
             --beauty-color: #ffafcc; 
             --goody-color: #a2d2ff;
+            --soft-shadow: 0 10px 30px rgba(0,0,0,0.04);
         }
-        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.6; }
-        .container { max-width: 600px; margin: 0 auto; }
+        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.8; }
+        .container { max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
         
-        /* --- 橫向排版：頭貼左，文字右 --- */
-        header { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            width: fit-content;
-            margin: 40px auto;
-            gap: 20px; 
-        }
-        
-        .avatar { 
-            width: 100px; 
-            height: 100px; 
-            border-radius: 50%; 
-            border: 3px solid white; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            object-fit: cover;
-            flex-shrink: 0;
-        }
+        /* 動畫：淡入效果 */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.5s ease forwards; }
 
-        .header-text {
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-        }
-
+        header { display: flex; align-items: center; justify-content: center; width: fit-content; margin: 20px auto 30px; gap: 20px; }
+        .avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); object-fit: cover; flex-shrink: 0; }
+        .header-text { display: flex; flex-direction: column; text-align: left; }
         .header-text h1 { margin: 0; }
-        .header-text h1 a { 
-            color: var(--main-color); 
-            text-decoration: none; 
-            font-size: 26px; 
-            font-weight: bold;
-            letter-spacing: 1px;
-            display: block;
-        }
-        
-        .subtitle { 
-            margin: 5px 0 0 0; 
-            font-size: 15px; 
-            font-weight: 500;
-            color: var(--text-color);
-            opacity: 0.85;
-            white-space: nowrap;
-        }
+        .header-text h1 a { color: var(--main-color); text-decoration: none; font-size: 24px; font-weight: bold; }
+        .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.7; white-space: nowrap; }
 
-        /* --- 右下角懸浮 IG 追蹤按鈕 --- */
-        .floating-ig {
-            position: fixed;
-            bottom: 25px;
-            right: 20px;
-            z-index: 9999;
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-            color: white;
-            padding: 10px 18px;
-            border-radius: 50px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            font-size: 14px;
-            font-weight: bold;
-            transition: transform 0.3s;
-        }
-        .floating-ig:active { transform: scale(0.9); }
+        /* 模式切換按鈕 */
+        .mode-switch { display: flex; justify-content: center; margin-bottom: 25px; gap: 10px; }
+        .mode-btn { background: white; border: 1px solid #e9edc9; color: #999; padding: 10px 18px; border-radius: 25px; cursor: pointer; font-size: 14px; transition: 0.3s; box-shadow: var(--soft-shadow); }
+        .mode-btn.active { background: var(--main-color); color: white; border-color: var(--main-color); }
 
-        /* 搜尋與篩選區 */
-        .filter-section { background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .search-box input { width: 100%; padding: 12px 15px; border: 2px solid #e9edc9; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 16px; }
-        .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 48px; transition: max-height 0.3s; margin-top: 12px;}
-        .tag-cloud.expanded { max-height: 1000px; }
-        .tag-btn { background: #e9edc9; border: none; padding: 6px 14px; border-radius: 15px; cursor: pointer; font-size: 14px; color: var(--text-color); }
-        .tag-btn.active { background: var(--main-color); color: white; }
-        .toggle-tags-btn { text-align: right; font-size: 12px; color: var(--main-color); cursor: pointer; margin-top: 8px; font-weight: bold; }
+        /* 導覽容器 */
+        .category-nav { background: #fff; padding: 20px; border-radius: 20px; box-shadow: var(--soft-shadow); margin-bottom: 20px; text-align: center; }
+        .nav-item { background: #fdfdfd; border: 1px solid #eee; padding: 12px 20px; border-radius: 15px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        .nav-item:active { background: #f0f0f0; transform: scale(0.95); }
+        .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-size: 14px; font-weight: bold; }
 
-        /* 卡片與按鈕優化 */
-        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border-top: 10px solid var(--main-color); }
+        /* 搜尋區 */
+        .filter-section { background: #fff; padding: 18px; border-radius: 20px; box-shadow: var(--soft-shadow); margin-bottom: 20px; }
+        .search-box input { width: 100%; padding: 12px 20px; border: 1px solid #eee; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 15px; background: #fafafa; }
+
+        /* 卡片與內容 */
+        .card { background: white; border-radius: 25px; padding: 25px; margin-bottom: 25px; box-shadow: var(--soft-shadow); border-top: 12px solid var(--main-color); position: relative; }
         .card.beauty { border-top-color: var(--beauty-color); }
         .card.goody { border-top-color: var(--goody-color); }
         
-        .swiper { width: 100%; height: 350px; border-radius: 15px; margin-bottom: 15px; background: #eee; }
+        .swiper { width: 100%; height: 350px; border-radius: 18px; margin-bottom: 18px; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
         
-        .card h2 { margin: 0 0 10px 0; color: #bc6c25; font-size: 1.4em; }
-        .info-row { font-size: 14px; margin-bottom: 10px; display: flex; align-items: center; }
+        .card h2 { margin: 0 0 12px 0; color: #444; font-size: 1.3em; display: flex; align-items: center; justify-content: space-between; }
+        .copy-icon { font-size: 14px; color: #ccc; cursor: pointer; padding: 5px; }
+        .copy-icon:active { color: var(--main-color); }
+
+        .info-row { font-size: 13.5px; margin-bottom: 10px; color: #777; display: flex; align-items: center; gap: 8px; }
+        .btn-link { display: inline-flex; align-items: center; background: var(--main-color); color: white !important; padding: 8px 20px; border-radius: 30px; text-decoration: none; font-size: 13px; font-weight: bold; margin-bottom: 5px; }
         
-        .btn-link { 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center;
-            background: var(--main-color); 
-            color: white !important; 
-            padding: 8px 18px; 
-            border-radius: 25px; 
-            text-decoration: none; 
-            font-size: 14px; 
-            font-weight: 500;
-            white-space: nowrap;
-            gap: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .btn-link i { font-size: 14px; margin: 0; color: white !important; }
+        /* 推薦人勳章 */
+        .recommender-badge { background: #f8f1e7; color: var(--main-color); padding: 2px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; display: inline-block; }
+        .beauty .recommender-badge { background: #fff0f5; color: #ff85a1; }
+        .goody .recommender-badge { background: #eef6ff; color: #72aee6; }
+
+        .comment-box { background: #fdfcf6; padding: 18px; border-radius: 15px; border-left: 3px solid var(--main-color); margin-top: 15px; font-size: 14px; color: #555; line-height: 1.7; }
         
-        .beauty .btn-link { background: var(--beauty-color); }
-        .goody .btn-link { background: var(--goody-color); }
-        
-        .comment-box { background: #fefae0; padding: 15px; border-radius: 10px; border-left: 4px solid var(--main-color); margin-top: 12px; font-size: 15px; color: #444; white-space: pre-wrap; }
-        .beauty .comment-box { border-left-color: var(--beauty-color); }
-        .goody .comment-box { border-left-color: var(--goody-color); }
-        .time-tag { font-size: 11px; color: #a9a9a9; text-align: right; margin-top: 15px; }
+        .floating-ig { position: fixed; bottom: 25px; right: 20px; z-index: 9999; background: linear-gradient(45deg, #f09433 0%, #bc1888 100%); color: white; padding: 10px 20px; border-radius: 50px; text-decoration: none; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); font-size: 14px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <a href="https://www.instagram.com/osac_nail2024?igsh=MWtpcmwzeGJqNmE2OQ%3D%3D&utm_source=qr" class="floating-ig" target="_blank">
+    <a href="https://www.instagram.com/osac_nail2024" class="floating-ig" target="_blank">
         <i class="fab fa-instagram"></i> 點擊追蹤
     </a>
 
     <div class="container">
         <header>
-            <img src="https://github.com/star979006-bit/Osacnail_map/blob/main/images/69DDDCFE-1088-4783-A970-6C825AAB9AE2.png?raw=true" class="avatar" alt="osac_nail">
+            <img src="https://github.com/star979006-bit/Osacnail_map/blob/main/images/69DDDCFE-1088-4783-A970-6C825AAB9AE2.png?raw=true" class="avatar">
             <div class="header-text">
-                <h1><a href="https://www.instagram.com/osac_nail2024?igsh=MWtpcmwzeGJqNmE2OQ%3D%3D&utm_source=qr" target="_blank">osac_nail2024</a></h1>
+                <h1><a href="https://www.instagram.com/osac_nail2024" target="_blank">osac_nail2024</a></h1>
                 <p class="subtitle">一群小女生的口袋名單</p>
             </div>
         </header>
 
-        <div class="filter-section">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="搜尋店名、評價或標籤..." onkeyup="filterData()">
-            </div>
-            <div id="tagList" class="tag-cloud"></div>
-            <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
+        <div class="mode-switch">
+            <button class="mode-btn active" id="btn-search" onclick="switchMode('search')">快速搜尋</button>
+            <button class="mode-btn" id="btn-food" onclick="switchMode('food')">美食地圖</button>
+            <button class="mode-btn" id="btn-goody" onclick="switchMode('goody')">好物推薦</button>
         </div>
 
-        <div id="list">正在載入閨蜜清單...</div>
+        <div id="searchView" class="view fade-in">
+            <div class="filter-section">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="搜尋店名或關鍵字..." onkeyup="filterData()">
+                </div>
+            </div>
+        </div>
+
+        <div id="categoryView" class="view fade-in" style="display: none;">
+            <div class="category-nav">
+                <div id="navBreadcrumb"></div>
+                <div id="navContent" class="nav-tags"></div>
+            </div>
+        </div>
+
+        <div id="list" class="fade-in">正在載入清單...</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -161,43 +114,60 @@
         const sheetID = "1SzMD4N7G66Iu3OnlX5POVTi-45hRsPBk_50B6CwyjZQ";
         const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv`;
         let allData = [];
-        let activeTags = new Set();
+        let currentMode = 'search';
+        let currentPath = [];
 
         async function fetchData() {
             Papa.parse(csvUrl, {
                 download: true, header: true,
                 complete: function(results) {
                     allData = results.data.map(row => ({
-                        region: row['區域'] || '', name: row['店名'] || '', address: row['地址'] || '',
-                        recommender: row['推薦人'] || '', content: row['評價內容'] || '',
-                        tags: row['標籤'] ? row['標籤'].split(/[,，]/).map(t => t.trim()) : [],
-                        imgs: row['圖片網址'] ? row['圖片網址'].split(/[;；]/).map(i => i.trim()) : [],
-                        time: row['新增時間'] || ''
+                        rawRegion: row['區域'] || '',
+                        regionLevels: (row['區域'] || '').split('-').map(s => s.trim()),
+                        name: row['店名'] || '', address: row['地址'] || '', recommender: row['推薦人'] || '',
+                        content: row['評價內容'] || '',
+                        imgs: row['圖片網址'] ? row['圖片網址'].split(/[;；]/).map(i => i.trim()) : []
                     })).filter(item => item.name);
-                    renderTags();
                     renderCards(allData);
                 }
             });
         }
 
-        function renderTags() {
-            const tags = new Set();
-            allData.forEach(item => { if(item.region) tags.add(item.region); item.tags.forEach(t => { if(t) tags.add(t); }); });
-            const tagList = document.getElementById('tagList');
-            tagList.innerHTML = '';
-            tags.forEach(tag => {
-                const btn = document.createElement('button');
-                btn.className = 'tag-btn';
-                btn.innerText = tag;
-                btn.onclick = () => { btn.classList.toggle('active'); activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag); filterData(); };
-                tagList.appendChild(btn);
-            });
+        function switchMode(mode) {
+            currentMode = mode; currentPath = [];
+            document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${mode}`).classList.add('active');
+            const targetView = (mode === 'search') ? 'searchView' : 'categoryView';
+            document.getElementById(targetView).style.display = 'block';
+            if (mode === 'goody') currentPath = ['好物'];
+            (mode === 'search') ? renderCards(allData) : renderNav();
         }
 
-        function toggleTags() {
-            const cloud = document.getElementById('tagList');
-            cloud.classList.toggle('expanded');
-            document.getElementById('toggleBtn').innerText = cloud.classList.contains('expanded') ? "收合標籤" : "更多標籤...";
+        function renderNav() {
+            const navContent = document.getElementById('navContent');
+            const navBreadcrumb = document.getElementById('navBreadcrumb');
+            let filteredList = allData;
+            currentPath.forEach((lvl, idx) => { filteredList = filteredList.filter(item => item.regionLevels[idx] === lvl); });
+            let options = new Set();
+            filteredList.forEach(item => { const nextLvl = item.regionLevels[currentPath.length]; if (nextLvl) options.add(nextLvl); });
+            let canGoBack = currentPath.length > (currentMode === 'goody' ? 1 : 0);
+            navBreadcrumb.innerHTML = canGoBack ? `<span class="back-btn" onclick="goBack()">← 返回上一層</span>` : `<span class="nav-title">請選擇類別</span>`;
+            navContent.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('div');
+                btn.className = 'nav-item'; btn.innerText = opt;
+                btn.onclick = () => { currentPath.push(opt); renderNav(); };
+                navContent.appendChild(btn);
+            });
+            if (currentPath.length > (currentMode === 'goody' ? 1 : 0)) renderCards(filteredList);
+            else renderCards([]);
+        }
+
+        function goBack() { currentPath.pop(); renderNav(); }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => { alert('已複製名稱: ' + text); });
         }
 
         function renderCards(data) {
@@ -205,27 +175,13 @@
             list.innerHTML = '';
             data.forEach((item, index) => {
                 let cardClass = "card";
-                let btnText = "點我開啟地圖";
-                let icon = "fa-map-marker-alt";
-
-                if (item.region.includes("美妝")) { cardClass = "card beauty"; btnText = "撒錢連結這邊請"; icon = "fa-shopping-cart"; }
-                else if (item.region.includes("好物")) { cardClass = "card goody"; btnText = "撒錢連結這邊請"; icon = "fa-shopping-cart"; }
-
+                if (item.rawRegion.includes("美妝")) cardClass += " beauty";
+                else if (item.rawRegion.includes("好物")) cardClass += " goody";
                 const card = document.createElement('div');
                 card.className = cardClass;
-                
-                let swiperHtml = '';
-                if (item.imgs.length > 0 && item.imgs[0] !== "") {
-                    swiperHtml = `<div class="swiper swiper-${index}"><div class="swiper-wrapper">` +
-                        item.imgs.map(img => `<div class="swiper-slide"><img src="${img}" onerror="this.src='https://placehold.co/600x400?text=Osac+Nail'"></div>`).join('') +
-                        `</div><div class="swiper-pagination"></div></div>`;
-                }
-
-                const linkHtml = item.address.startsWith('http') ? 
-                    `<a href="${item.address}" target="_blank" class="btn-link"><i class="fas ${icon}"></i> ${btnText}</a>` : 
-                    `<span>${item.address}</span>`;
-
-                card.innerHTML = `${swiperHtml}<h2>${item.name}</h2><div class="info-row">${linkHtml}</div><div class="info-row"><i class="fas fa-user-heart" style="color:inherit"></i><span>推薦人：${item.recommender}</span></div><div class="comment-box">${item.content}</div><div class="time-tag">📅 更新：${item.time}</div>`;
+                let swiperHtml = item.imgs.length > 0 && item.imgs[0] ? `<div class="swiper swiper-${index}"><div class="swiper-wrapper">${item.imgs.map(img => `<div class="swiper-slide"><img src="${img}"></div>`).join('')}</div><div class="swiper-pagination"></div></div>` : '';
+                const linkHtml = item.address.startsWith('http') ? `<a href="${item.address}" target="_blank" class="btn-link"><i class="fas fa-map-marker-alt"></i> 查看詳情</a>` : `<span>${item.address}</span>`;
+                card.innerHTML = `${swiperHtml}<h2>${item.name} <i class="far fa-copy copy-icon" onclick="copyToClipboard('${item.name}')"></i></h2><div class="info-row">${linkHtml}</div><div class="info-row">來自 <span class="recommender-badge">${item.recommender}</span> 的推薦</div><div class="comment-box">${item.content}</div>`;
                 list.appendChild(card);
                 if (item.imgs.length > 1) new Swiper(`.swiper-${index}`, { pagination: { el: '.swiper-pagination', clickable: true } });
             });
@@ -233,11 +189,7 @@
 
         function filterData() {
             const term = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allData.filter(item => {
-                const matchSearch = item.name.toLowerCase().includes(term) || (item.content && item.content.toLowerCase().includes(term));
-                const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => [item.region, ...item.tags].includes(t));
-                return matchSearch && matchTags;
-            });
+            const filtered = allData.filter(item => item.name.toLowerCase().includes(term) || item.content.toLowerCase().includes(term));
             renderCards(filtered);
         }
         fetchData();
