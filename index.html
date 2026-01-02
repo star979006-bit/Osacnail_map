@@ -20,13 +20,12 @@
             background-color: var(--bg-color); 
             color: var(--text-color); 
             margin: 0; 
-            padding: 20px 15px; /* 增加 body 左右內距 */
+            padding: 20px 20px; /* 增加 body 左右留白 */
             line-height: 1.8; 
         }
         .container { 
             max-width: 600px; 
             margin: 0 auto; 
-            padding: 0 10px; /* 增加容器左右空間，防止卡片貼邊 */
             padding-bottom: 80px; 
         }
         
@@ -59,7 +58,7 @@
         .nav-item:active { transform: scale(0.95); background: #f0f0f0; }
         .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-size: 14px; font-weight: bold; }
 
-        .card { background: white; border-radius: 25px; padding: 25px; margin-bottom: 25px; box-shadow: var(--soft-shadow); border-top: 12px solid var(--main-color); position: relative; }
+        .card { background: white; border-radius: 25px; padding: 25px; margin: 0 5px 25px 5px; box-shadow: var(--soft-shadow); border-top: 12px solid var(--main-color); position: relative; }
         .card.beauty { border-top-color: var(--beauty-color); }
         .card.goody { border-top-color: var(--goody-color); }
         .swiper { width: 100%; height: 350px; border-radius: 18px; margin-bottom: 18px; background: #eee; }
@@ -96,7 +95,7 @@
         <div id="searchView" class="view fade-in">
             <div class="filter-section">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="搜尋店名、評價、標籤..." oninput="filterData()">
+                    <input type="text" id="searchInput" placeholder="試試輸入：台南 法國吐司..." oninput="filterData()">
                 </div>
                 <div id="tagList" class="tag-cloud"></div>
                 <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
@@ -110,7 +109,7 @@
             </div>
         </div>
 
-        <div id="list" class="fade-in">正在準備清單...</div>
+        <div id="list" class="fade-in">正在尋找美味清單...</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -127,14 +126,20 @@
             Papa.parse(csvUrl, {
                 download: true, header: true,
                 complete: function(results) {
-                    allData = results.data.map(row => ({
-                        rawRegion: row['區域'] || '',
-                        regionLevels: (row['區域'] || '').split('-').map(s => s.trim()),
-                        tags: row['標籤'] ? row['標籤'].split(/[,，]/).map(t => t.trim()) : [],
-                        name: row['店名'] || '', address: row['地址'] || '', recommender: row['推薦人'] || '',
-                        content: row['評價內容'] || '',
-                        imgs: row['圖片網址'] ? row['圖片網址'].split(/[;；]/).map(i => i.trim()) : []
-                    })).filter(item => item.name);
+                    allData = results.data.map(row => {
+                        const tagsString = row['標籤'] || '';
+                        return {
+                            rawRegion: row['區域'] || '',
+                            regionLevels: (row['區域'] || '').split('-').map(s => s.trim()),
+                            tags: tagsString.split(/[,，]/).map(t => t.trim()).filter(t => t),
+                            searchString: (row['店名'] + row['評價內容'] + tagsString + row['區域']).toLowerCase(),
+                            name: row['店名'] || '',
+                            address: row['地址'] || '',
+                            recommender: row['推薦人'] || '',
+                            content: row['評價內容'] || '',
+                            imgs: row['圖片網址'] ? row['圖片網址'].split(/[;；]/).map(i => i.trim()) : []
+                        };
+                    }).filter(item => item.name);
                     renderTags();
                     renderCards(allData);
                 }
@@ -158,7 +163,7 @@
 
         function renderTags() {
             const tags = new Set();
-            allData.forEach(item => item.tags.forEach(t => { if(t) tags.add(t); }));
+            allData.forEach(item => item.tags.forEach(t => tags.add(t)));
             const tagList = document.getElementById('tagList');
             tagList.innerHTML = '';
             tags.forEach(tag => {
@@ -166,10 +171,8 @@
                 btn.className = `tag-btn ${activeTags.has(tag) ? 'active' : ''}`;
                 btn.innerText = tag;
                 btn.onclick = () => { 
-                    if(activeTags.has(tag)) activeTags.delete(tag);
-                    else activeTags.add(tag);
-                    renderTags();
-                    filterData(); 
+                    if(activeTags.has(tag)) activeTags.delete(tag); else activeTags.add(tag);
+                    renderTags(); filterData(); 
                 };
                 tagList.appendChild(btn);
             });
@@ -198,8 +201,7 @@
                 btn.onclick = () => { currentPath.push(opt); renderNav(); };
                 navContent.appendChild(btn);
             });
-            if (currentPath.length > (currentMode === 'goody' ? 1 : 0)) renderCards(filteredList);
-            else renderCards([]);
+            if (currentPath.length > (currentMode === 'goody' ? 1 : 0)) renderCards(filteredList); else renderCards([]);
         }
 
         function goBack() { currentPath.pop(); renderNav(); }
@@ -228,10 +230,16 @@
         }
 
         function filterData() {
-            const term = document.getElementById('searchInput').value.toLowerCase();
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            // 將輸入字串拆分成關鍵字陣列（例如 "台南 法國吐司" -> ["台南", "法國吐司"]）
+            const searchKeywords = input.split(/\s+/).filter(k => k);
+
             const filtered = allData.filter(item => {
-                const matchSearch = item.name.toLowerCase().includes(term) || item.content.toLowerCase().includes(term) || item.tags.some(t => t.toLowerCase().includes(term));
+                // 檢查是否包含所有輸入的關鍵字
+                const matchSearch = searchKeywords.every(kw => item.searchString.includes(kw));
+                // 檢查是否符合已選標籤（且關係）
                 const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
+                
                 return matchSearch && matchTags;
             });
             renderCards(filtered);
@@ -240,3 +248,4 @@
     </script>
 </body>
 </html>
+
