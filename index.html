@@ -19,12 +19,14 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.5s ease forwards; }
 
-        header { display: flex; align-items: center; justify-content: center; width: fit-content; margin: 20px auto 30px; gap: 25px; }
-        .avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); object-fit: cover; flex-shrink: 0; }
+        header { display: flex; align-items: center; justify-content: center; width: fit-content; margin: 30px auto; gap: 25px; }
+        .avatar { width: 95px; height: 95px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); object-fit: cover; flex-shrink: 0; }
         .header-text { display: flex; flex-direction: column; text-align: left; }
         .header-text h1 { margin: 0; }
-        .header-text h1 a { color: var(--main-color); text-decoration: none; font-size: 24px; font-weight: bold; letter-spacing: 1px; }
-        .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.8; white-space: nowrap; }
+        
+        /* 標題放大調整 */
+        .header-text h1 a { color: var(--main-color); text-decoration: none; font-size: 32px; font-weight: bold; letter-spacing: 1px; }
+        .subtitle { margin: 5px 0 0 0; font-size: 14px; opacity: 0.85; white-space: nowrap; font-weight: 500; }
 
         .mode-switch { display: flex; justify-content: center; margin-bottom: 25px; gap: 8px; flex-wrap: wrap; }
         .mode-btn { background: white; border: 1px solid #e9edc9; color: var(--main-color); padding: 10px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 14px; flex: 1; min-width: 100px; text-align: center; box-shadow: var(--btn-shadow); }
@@ -38,9 +40,7 @@
         .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-size: 14px; font-weight: bold; }
 
         .filter-section { background: #fff; padding: 15px; border-radius: 15px; box-shadow: var(--soft-shadow); margin-bottom: 20px; box-sizing: border-box; }
-        .search-box input { width: 100%; padding: 12px 15px; border: 2px solid #e9edc9; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 14px; display: block; margin-bottom: 8px; }
-        
-        /* 資料筆數統計樣式 */
+        .search-box input { width: 100%; padding: 12px 15px; border: 2px solid #e9edc9; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 15px; display: block; margin-bottom: 8px; }
         .data-count { text-align: right; font-size: 11px; color: #aaa; margin-bottom: 10px; font-weight: bold; }
 
         .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 48px; transition: max-height 0.3s; }
@@ -54,14 +54,9 @@
         .card.goody { border-top-color: var(--goody-color); }
         .swiper { width: 100%; height: 350px; border-radius: 18px; margin-bottom: 18px; background: #eee; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
-        
         .card h2 { margin: 0 0 12px 0; color: #444; font-size: 1.3em; display: flex; align-items: center; justify-content: space-between; }
         
-        /* 複製區塊樣式 */
         .copy-wrapper { font-size: 12px; color: #bbb; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: normal; }
-        .copy-wrapper:active { color: var(--main-color); }
-
-        .info-row { font-size: 13.5px; margin-bottom: 10px; color: #777; display: flex; align-items: center; gap: 8px; }
         .btn-link { display: inline-flex; align-items: center; background: var(--main-color); color: white !important; padding: 8px 20px; border-radius: 30px; text-decoration: none; font-size: 13.5px; font-weight: bold; gap: 8px; }
         .recommender-badge { background: #f8f1e7; color: var(--main-color); padding: 2px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
         .comment-box { background: #fdfcf6; padding: 18px; border-radius: 10px; border-left: 3px solid var(--main-color); margin-top: 15px; font-size: 14px; color: #555; line-height: 1.8; white-space: pre-wrap; }
@@ -101,10 +96,9 @@
         <div id="searchView" class="view fade-in">
             <div class="filter-section">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="搜尋區域、店名或評價..." onkeyup="filterData()">
+                    <input type="text" id="searchInput" placeholder="搜尋區域、店名或評價..." oninput="filterData()">
                 </div>
                 <div id="dataCount" class="data-count">總共有 0 筆資料</div>
-                
                 <div id="tagList" class="tag-cloud"></div>
                 <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
             </div>
@@ -227,7 +221,7 @@
         function goBack() { currentPath.pop(); renderNav(); }
 
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => { alert('已複製店名: ' + text); });
+            navigator.clipboard.writeText(text).then(() => { alert('已複製名稱: ' + text); });
         }
 
         function updateDataCount(count) {
@@ -249,7 +243,6 @@
                 card.className = cardClass;
                 let swiperHtml = item.imgs.length > 0 && item.imgs[0] ? `<div class="swiper swiper-${index}"><div class="swiper-wrapper">${item.imgs.map(img => `<div class="swiper-slide"><img src="${img}"></div>`).join('')}</div><div class="swiper-pagination"></div></div>` : '';
                 const linkHtml = item.address.startsWith('http') ? `<a href="${item.address}" target="_blank" class="btn-link"><i class="fas ${icon}"></i> ${btnText}</a>` : `<span>${item.address}</span>`;
-                
                 card.innerHTML = `${swiperHtml}<h2>${item.name} <div class="copy-wrapper" onclick="copyToClipboard('${item.name}')">點擊複製 <i class="far fa-copy"></i></div></h2><div class="info-row">${linkHtml}</div><div class="info-row">來自 <span class="recommender-badge">${item.recommender}</span> 的推薦</div><div class="comment-box">${item.content}</div>`;
                 list.appendChild(card);
                 if (item.imgs.length > 1) new Swiper(`.swiper-${index}`, { pagination: { el: '.swiper-pagination', clickable: true } });
@@ -260,15 +253,17 @@
             const rawTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             const filtered = allData.filter(item => {
                 const searchText = (item.name + item.content + item.rawRegion + item.tags.join(' ')).toLowerCase();
-                if (rawTerm === "") return activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
-
-                let isMatch = searchText.includes(rawTerm);
-                if (!isMatch) {
-                    const keywords = ["台南", "台中", "台北", "高雄", "早午餐", "甜點", "咖啡", "美妝"];
-                    let parts = keywords.filter(k => rawTerm.includes(k.toLowerCase()));
-                    if (parts.length > 0) isMatch = parts.every(p => searchText.includes(p.toLowerCase()));
+                
+                // 1. 如果輸入是空的，只檢查標籤
+                if (rawTerm === "") {
+                    return activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
                 }
-                return isMatch && (activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t)));
+
+                // 2. 智慧模糊匹配：只要包含輸入的所有字眼
+                const matchSearch = rawTerm.split(/\s+/).every(q => searchText.includes(q));
+                const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
+                
+                return matchSearch && matchTags;
             });
             renderCards(filtered);
             updateDataCount(filtered.length);
