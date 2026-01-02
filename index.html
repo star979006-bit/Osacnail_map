@@ -25,12 +25,10 @@
         .header-text h1 a { color: var(--main-color); text-decoration: none; font-size: 24px; font-weight: bold; }
         .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.7; }
 
-        /* 模式切換按鈕 */
         .mode-switch { display: flex; justify-content: center; margin-bottom: 35px; gap: 8px; flex-wrap: wrap; }
         .mode-btn { background: white; border: 1.5px solid #e9edc9; color: var(--main-color); padding: 10px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 14px; flex: 1; min-width: 100px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .mode-btn.active { background: var(--main-color); color: white; border-color: var(--main-color); }
 
-        /* 導覽容器 */
         .category-nav { background: #fff; padding: 25px 20px; border-radius: 25px; box-shadow: var(--soft-shadow); margin-bottom: 25px; text-align: center; }
         .nav-title { font-size: 16px; color: #444; margin-bottom: 20px; display: block; font-weight: bold; }
         .nav-tags { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -38,7 +36,6 @@
         .nav-item:active { transform: scale(0.95); background: #fafafa; }
         .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-weight: bold; font-size: 14px; }
 
-        /* 搜尋區 */
         .filter-section { background: #fff; padding: 20px; border-radius: 25px; box-shadow: var(--soft-shadow); margin-bottom: 25px; }
         .search-box input { width: 100%; padding: 14px 20px; border: 1.5px solid #eee; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 16px; background: #fafafa; margin-bottom: 15px; }
         .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 50px; transition: max-height 0.3s; }
@@ -47,7 +44,6 @@
         .tag-btn.active { background: var(--main-color); color: white; }
         .toggle-tags-btn { text-align: right; font-size: 12px; color: var(--main-color); cursor: pointer; margin-top: 10px; font-weight: bold; }
 
-        /* 卡片設定 */
         .card { background: white; border-radius: 25px; padding: 25px; margin-bottom: 30px; box-shadow: var(--soft-shadow); border-top: 12px solid var(--main-color); position: relative; }
         .card.beauty { border-top-color: var(--beauty-color); }
         .card.goody { border-top-color: var(--goody-color); }
@@ -207,7 +203,7 @@
 
         function renderCards(data) {
             const list = document.getElementById('list');
-            list.innerHTML = data.length ? '' : '<p style="text-align:center; padding:20px; color:#999;">沒有找到符合的項目 :(</p>';
+            list.innerHTML = '';
             data.forEach((item, index) => {
                 let cardClass = "card", btnText = "點我開啟地圖", icon = "fa-map-marker-alt";
                 if (item.rawRegion.includes("美妝") || item.rawRegion.includes("好物")) {
@@ -224,10 +220,16 @@
             });
         }
 
+        /* --- 修正後的智慧搜尋邏輯 --- */
         function filterData() {
-            const rawTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            const rawInput = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            // 關鍵：將使用者輸入的字串依空格切開成陣列
+            // 例如 "台南 早午餐" 會變成 ["台南", "早午餐"]
+            const searchTerms = rawInput.split(/\s+/).filter(t => t !== "");
+
             const filtered = allData.filter(item => {
-                // 這裡擴大搜尋範圍：店名、內容、地址、區域、所有標籤
+                // 將資料中所有可能被搜的文字組合起來
                 const searchableText = [
                     item.name, 
                     item.content, 
@@ -236,9 +238,13 @@
                     ...item.tags
                 ].join(' ').toLowerCase();
 
-                const isMatch = rawTerm === "" || searchableText.includes(rawTerm);
+                // 檢查是否「所有」搜尋關鍵字都出現在這筆資料中 (AND 邏輯)
+                const isMatchText = searchTerms.every(term => searchableText.includes(term));
+                
+                // 檢查是否符合標籤雲點選的標籤
                 const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
-                return isMatch && matchTags;
+                
+                return isMatchText && matchTags;
             });
             renderCards(filtered);
         }
