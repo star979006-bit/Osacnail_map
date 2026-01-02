@@ -23,36 +23,39 @@
         .header-text { display: flex; flex-direction: column; text-align: left; }
         .header-text h1 { margin: 0; }
         .header-text h1 a { color: var(--main-color); text-decoration: none; font-size: 26px; font-weight: bold; }
+        /* 副標題更新 */
         .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.85; font-weight: 500; }
 
         .mode-switch { display: flex; justify-content: center; margin-bottom: 35px; gap: 8px; flex-wrap: wrap; }
         .mode-btn { background: white; border: 1.5px solid #e9edc9; color: var(--main-color); padding: 12px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 15px; flex: 1; min-width: 100px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .mode-btn.active { background: var(--main-color); color: white; border-color: var(--main-color); }
 
-        /* 分類地圖樣式 */
-        .category-nav { background: #fff; padding: 25px 20px; border-radius: 25px; box-shadow: var(--soft-shadow); margin-bottom: 25px; text-align: center; }
-        .nav-title { font-size: 16px; color: #444; margin-bottom: 20px; display: block; font-weight: bold; }
-        .nav-tags { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .nav-item { background: white; border: 1.5px solid #eee; padding: 15px 10px; border-radius: 15px; cursor: pointer; font-size: 15px; font-weight: 500; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .nav-item:active { transform: scale(0.95); background: #fafafa; }
-        .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-weight: bold; font-size: 14px; }
+        /* --- 恢復妳要的大白框搜尋區域樣式 --- */
+        .filter-section, .category-nav { 
+            background: #fff; 
+            padding: 30px 25px; /* 增加內距讓框感更明顯 */
+            border-radius: 30px; 
+            box-shadow: var(--soft-shadow); 
+            margin-bottom: 35px; 
+        }
 
-        /* --- 恢復原本大小的搜尋列 --- */
-        .filter-section { background: #fff; padding: 25px; border-radius: 25px; box-shadow: var(--soft-shadow); margin-bottom: 25px; }
         .search-container { position: relative; width: 100%; margin-bottom: 15px; }
+        
+        /* 搜尋輸入框恢復原本的大氣大小 */
         .search-box input { 
             width: 100%; 
-            padding: 15px 20px; /* 恢復原本寬敞的內距 */
+            padding: 18px 25px; /* 更大的輸入空間 */
             border: 1.5px solid #eee; 
-            border-radius: 30px; 
+            border-radius: 35px; 
             box-sizing: border-box; 
             outline: none; 
-            font-size: 17px; 
+            font-size: 18px; /* 字體調回大尺寸 */
             background: #fafafa; 
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+            transition: 0.3s;
         }
         
-        /* 數量泡泡改為絕對定位且不影響框框寬度 */
+        /* 數量泡泡漂浮在最右側，不影響輸入框空間 */
         .result-count { 
             position: absolute; 
             right: 15px; 
@@ -61,7 +64,7 @@
             background: var(--main-color); 
             color: white; 
             font-size: 13px; 
-            padding: 3px 10px; 
+            padding: 4px 12px; 
             border-radius: 15px; 
             font-weight: bold; 
             opacity: 0; 
@@ -71,24 +74,33 @@
         }
         .result-count.show { opacity: 1; }
 
+        /* 標籤雲與方格分類 */
+        .nav-title { font-size: 16px; color: #444; margin-bottom: 20px; display: block; font-weight: bold; text-align: center; }
+        .nav-tags { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .nav-item { background: white; border: 1.5px solid #eee; padding: 18px 10px; border-radius: 18px; cursor: pointer; font-size: 16px; font-weight: 500; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .nav-item:active { transform: scale(0.95); background: #fafafa; }
+        .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-weight: bold; font-size: 14px; }
+
         .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 52px; transition: max-height 0.3s; }
         .tag-cloud.expanded { max-height: 1000px; }
-        .tag-btn { background: #e9edc9; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer; font-size: 14px; color: var(--text-color); transition: 0.2s; }
+        .tag-btn { background: #e9edc9; border: none; padding: 8px 16px; border-radius: 18px; cursor: pointer; font-size: 14px; color: var(--text-color); transition: 0.2s; }
         .tag-btn.active { background: var(--main-color); color: white; }
-        .toggle-tags-btn { text-align: right; font-size: 13px; color: var(--main-color); cursor: pointer; margin-top: 12px; font-weight: bold; }
+        .toggle-tags-btn { text-align: right; font-size: 13px; color: var(--main-color); cursor: pointer; margin-top: 15px; font-weight: bold; }
 
-        /* 卡片內容樣式 */
-        .card { background: white; border-radius: 25px; padding: 25px; margin-bottom: 30px; box-shadow: var(--soft-shadow); border-top: 12px solid var(--main-color); position: relative; }
+        /* 卡片內容排版 */
+        .card { background: white; border-radius: 30px; padding: 30px; margin-bottom: 35px; box-shadow: var(--soft-shadow); border-top: 12px solid var(--main-color); position: relative; }
         .card.beauty { border-top-color: var(--beauty-color); }
         .card.goody { border-top-color: var(--goody-color); }
-        .swiper { width: 100%; height: 350px; border-radius: 20px; margin-bottom: 20px; background: #f0f0f0; }
+        .swiper { width: 100%; height: 350px; border-radius: 25px; margin-bottom: 25px; background: #f0f0f0; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
-        .card h2 { margin: 0 0 12px 0; color: #444; font-size: 1.4em; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+        .card h2 { margin: 0 0 15px 0; color: #444; font-size: 1.5em; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
         .copy-btn-wrapper { font-size: 12px; color: #aaa; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: normal; }
-        .info-row { font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; }
-        .btn-link { display: inline-flex; align-items: center; background: var(--main-color); color: white !important; padding: 8px 16px; border-radius: 30px; text-decoration: none; font-size: 13.5px; font-weight: bold; gap: 6px; width: fit-content; }
-        .recommender-badge { background: #f8f1e7; color: var(--main-color); padding: 3px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
-        .comment-box { background: #fdfcf6; padding: 20px; border-radius: 15px; border-left: 4px solid var(--main-color); margin-top: 15px; font-size: 15px; color: #555; line-height: 1.8; }
+        
+        .info-row { font-size: 15px; margin-bottom: 15px; display: flex; align-items: center; }
+        .btn-link { display: inline-flex; align-items: center; background: var(--main-color); color: white !important; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-size: 14px; font-weight: bold; gap: 8px; width: fit-content; }
+        .recommender-badge { background: #f8f1e7; color: var(--main-color); padding: 4px 14px; border-radius: 10px; font-size: 14px; font-weight: bold; }
+        .comment-box { background: #fdfcf6; padding: 25px; border-radius: 20px; border-left: 5px solid var(--main-color); margin-top: 20px; font-size: 16px; color: #555; line-height: 1.8; }
+        
         .floating-ig { position: fixed; bottom: 25px; right: 20px; z-index: 9999; background: linear-gradient(45deg, #f09433 0%, #bc1888 100%); color: white; padding: 12px 22px; border-radius: 50px; text-decoration: none; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.25); font-size: 15px; font-weight: bold; }
     </style>
 </head>
@@ -230,7 +242,7 @@
                 btn.onclick = () => { currentPath.push(opt); renderNav(mode); };
                 navContent.appendChild(btn);
             });
-            if (currentPath.length > (mode === 'goody' ? 1 : 0)) renderCards(filteredList);
+            if (currentPath.length > (currentMode === 'goody' ? 1 : 0)) renderCards(filteredList);
             else renderCards([]);
         }
 
@@ -242,7 +254,13 @@
 
         function renderCards(data) {
             const list = document.getElementById('list');
-            list.innerHTML = data.length ? '' : '<p style="text-align:center; padding:20px; color:#999;">沒有找到符合的項目 :(</p>';
+            list.innerHTML = '';
+            
+            if (data.length === 0 && document.getElementById('categoryView').style.display !== 'block') {
+                list.innerHTML = '<p style="text-align:center; padding:20px; color:#999;">沒有找到符合的項目 :(</p>';
+                return;
+            }
+
             data.forEach((item, index) => {
                 let cardClass = "card", btnText = "點我開啟地圖", icon = "fa-map-marker-alt";
                 if (item.rawRegion.includes("美妝") || item.rawRegion.includes("好物")) {
