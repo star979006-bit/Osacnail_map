@@ -237,55 +237,36 @@
             });
         }
 
-        /* --- 核心修復：最強模糊搜尋引擎 --- */
+        /* --- 終極相容搜尋引擎 --- */
         function filterData() {
-            const rawInput = document.getElementById('searchInput').value.toLowerCase().trim();
+            const rawTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             
-            // 定義常見的地標、城市與分類關鍵字（用於自動拆分）
-            const dictionary = ["台南", "台中", "台北", "高雄", "日本", "東京", "早午餐", "甜點", "咖啡", "美甲", "美妝", "酒吧", "熱炒", "早午餐", "甜點", "檸檬塔"];
-            
-            let queryParts = [];
-            
-            if (rawInput === "") {
-                // 如果沒輸入，只根據標籤過濾
+            if (rawTerm === "") {
                 const filtered = allData.filter(item => activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t)));
                 renderCards(filtered);
                 return;
             }
 
-            // 智慧拆分邏輯：
-            // 1. 先按空格拆分
-            let initialParts = rawInput.split(/\s+/).filter(p => p !== "");
-            
-            initialParts.forEach(part => {
-                let tempPart = part;
-                let matched = false;
-                // 2. 檢查這段文字是否包含字典裡的關鍵字（例如打 "台南早午餐"）
-                dictionary.forEach(word => {
-                    if (tempPart.includes(word.toLowerCase())) {
-                        queryParts.push(word.toLowerCase());
-                        tempPart = tempPart.replace(word.toLowerCase(), "");
-                        matched = true;
-                    }
-                });
-                // 3. 剩下的部分也當作關鍵字
-                if (tempPart.trim() !== "") queryParts.push(tempPart.trim());
-                else if (!matched) queryParts.push(part);
-            });
-
-            // 移除重複項
-            queryParts = [...new Set(queryParts)];
-
             const filtered = allData.filter(item => {
-                const searchText = (item.name + item.content + item.rawRegion + item.tags.join(' ') + item.recommender).toLowerCase();
+                const searchText = (item.name + item.content + item.rawRegion + item.tags.join(' ')).toLowerCase();
                 
-                // 必須符合「所有」拆分出來的關鍵字
-                const matchSearch = queryParts.every(q => searchText.includes(q));
-                const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
+                // 1. 先嘗試「完整比對」（解決打台中、台南沒反應的問題）
+                if (searchText.includes(rawTerm)) return true;
+
+                // 2. 如果完整比對沒中，再嘗試拆分比對（解決台南早午餐沒空格的問題）
+                const dictionary = ["台南", "台中", "台北", "高雄", "早午餐", "甜點", "咖啡", "美甲", "美妝", "酒吧", "熱炒"];
+                let foundParts = dictionary.filter(word => rawTerm.includes(word.toLowerCase()));
                 
-                return matchSearch && matchTags;
+                if (foundParts.length > 0) {
+                    return foundParts.every(part => searchText.includes(part));
+                }
+
+                return false;
             });
-            renderCards(filtered);
+
+            // 套用標籤過濾
+            const finalFiltered = filtered.filter(item => activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t)));
+            renderCards(finalFiltered);
         }
         fetchData();
     </script>
