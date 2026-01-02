@@ -11,6 +11,7 @@
             --main-color: #d4a373; --bg-color: #fefae0; --text-color: #606c38;
             --beauty-color: #ffafcc; --goody-color: #a2d2ff;
             --soft-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            --btn-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
         body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.8; }
         .container { max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
@@ -25,15 +26,32 @@
         .header-text h1 a { color: var(--main-color); text-decoration: none; font-size: 24px; font-weight: bold; }
         .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.7; white-space: nowrap; }
 
+        /* 模式切換按鈕 */
         .mode-switch { display: flex; justify-content: center; margin-bottom: 25px; gap: 8px; flex-wrap: wrap; }
         .mode-btn { background: white; border: 1px solid #e9edc9; color: var(--main-color); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 14px; flex: 1; min-width: 100px; text-align: center; }
         .mode-btn.active { background: var(--main-color); color: white; border-color: var(--main-color); }
 
+        /* 分類方格導覽樣式 */
         .category-nav { background: #fff; padding: 20px; border-radius: 20px; box-shadow: var(--soft-shadow); margin-bottom: 20px; text-align: center; }
-        .nav-tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-        .nav-item { background: #fdfdfd; border: 1px solid #eee; padding: 10px 20px; border-radius: 15px; cursor: pointer; font-size: 14px; transition: 0.2s; }
-        .nav-item:active { transform: scale(0.95); background: #f0f0f0; }
+        .nav-tags { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; justify-content: center; } /* 改為網格兩排 */
+        .nav-item { 
+            background: white; 
+            border: 1px solid #eee; 
+            padding: 15px 10px; 
+            border-radius: 15px; 
+            cursor: pointer; 
+            font-size: 15px; 
+            font-weight: 500;
+            transition: 0.2s; 
+            box-shadow: var(--btn-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .nav-item:active { transform: scale(0.95); background: var(--bg-color); border-color: var(--main-color); }
 
+        /* 搜尋與標籤雲區 */
         .filter-section { background: #fff; padding: 18px; border-radius: 20px; box-shadow: var(--soft-shadow); margin-bottom: 20px; }
         .search-box input { width: 100%; padding: 12px 20px; border: 1px solid #eee; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 15px; background: #fafafa; margin-bottom: 15px; }
         .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 48px; transition: max-height 0.3s; }
@@ -42,6 +60,7 @@
         .tag-btn.active { background: var(--main-color); color: white; }
         .toggle-tags-btn { text-align: right; font-size: 12px; color: var(--main-color); cursor: pointer; margin-top: 8px; font-weight: bold; }
 
+        /* 卡片與內容 */
         .card { background: white; border-radius: 25px; padding: 25px; margin-bottom: 25px; box-shadow: var(--soft-shadow); border-top: 12px solid var(--main-color); position: relative; }
         .card.beauty { border-top-color: var(--beauty-color); }
         .card.goody { border-top-color: var(--goody-color); }
@@ -57,7 +76,7 @@
 </head>
 <body>
 
-    <a href="https://www.instagram.com/osac_nail2024" class="floating-ig" target="_blank">
+    <a href="https://www.instagram.com/osac_nail2024?igsh=MWtpcmwzeGJqNmE2OQ%3D%3D&utm_source=qr" class="floating-ig" target="_blank">
         <i class="fab fa-instagram"></i> 點擊追蹤
     </a>
 
@@ -65,7 +84,7 @@
         <header>
             <img src="https://github.com/star979006-bit/Osacnail_map/blob/main/images/69DDDCFE-1088-4783-A970-6C825AAB9AE2.png?raw=true" class="avatar">
             <div class="header-text">
-                <h1><a href="https://www.instagram.com/osac_nail2024" target="_blank">osac_nail2024</a></h1>
+                <h1><a href="https://www.instagram.com/osac_nail2024?igsh=MWtpcmwzeGJqNmE2OQ%3D%3D&utm_source=qr" target="_blank">osac_nail2024</a></h1>
                 <p class="subtitle">一群小女生的口袋名單</p>
             </div>
         </header>
@@ -79,7 +98,7 @@
         <div id="searchView" class="view fade-in">
             <div class="filter-section">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="搜尋地區、店名、或好物..." onkeyup="filterData()">
+                    <input type="text" id="searchInput" placeholder="搜尋店名或評價..." onkeyup="filterData()">
                 </div>
                 <div id="tagList" class="tag-cloud"></div>
                 <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
@@ -176,7 +195,13 @@
             navContent.innerHTML = '';
             options.forEach(opt => {
                 const btn = document.createElement('div');
-                btn.className = 'nav-item'; btn.innerText = opt;
+                btn.className = 'nav-item';
+                // 智慧判斷國旗
+                let prefix = "";
+                if (opt === "台灣") prefix = "🇹🇼 ";
+                if (opt === "日本") prefix = "🇯🇵 ";
+                
+                btn.innerHTML = `${prefix}${opt}`;
                 btn.onclick = () => { currentPath.push(opt); renderNav(); };
                 navContent.appendChild(btn);
             });
@@ -187,7 +212,7 @@
         function goBack() { currentPath.pop(); renderNav(); }
 
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => { alert('已複製名稱: ' + text); });
+            navigator.clipboard.writeText(text).then(() => { alert('已複製: ' + text); });
         }
 
         function renderCards(data) {
@@ -209,39 +234,12 @@
             });
         }
 
-        /* --- 優化後的搜尋邏輯：兼顧單字與組合 --- */
         function filterData() {
             const rawTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             const filtered = allData.filter(item => {
                 const searchText = (item.name + item.content + item.rawRegion + item.tags.join('')).toLowerCase();
-                
-                // 1. 如果輸入是空的，直接檢查標籤
-                if (rawTerm === "") {
-                    return activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
-                }
-
-                // 2. 如果有輸入文字，我們檢查是否包含「所有」輸入的片段（無論有沒有空格）
-                // 這裡我們把常見的地點（台南、台中）跟類別（早午餐）做智慧匹配
-                let isMatch = false;
-                
-                // 先檢查完整包含 (例如打 "台中" 或 "早午餐")
-                if (searchText.includes(rawTerm)) {
-                    isMatch = true;
-                } else {
-                    // 如果不包含完整字串，嘗試自動拆分關鍵字（例如用戶打 "台中早午餐"）
-                    // 我們檢查資料是否同時包含 "台中" 以及 "早午餐"
-                    // 這裡簡單使用：只要資料裡能找到這個詞的所有字符組合即可
-                    const keywords = ["台中", "台南", "台北", "高雄", "日本", "東京", "早午餐", "甜點", "咖啡", "美妝", "美甲"];
-                    let matchedKeywords = keywords.filter(k => rawTerm.includes(k.toLowerCase()));
-                    
-                    if (matchedKeywords.length > 1) {
-                        isMatch = matchedKeywords.every(k => searchText.includes(k.toLowerCase()));
-                    }
-                }
-                
-                // 3. 同時要符合已選取的標籤
+                let isMatch = rawTerm === "" || searchText.includes(rawTerm);
                 const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
-                
                 return isMatch && matchTags;
             });
             renderCards(filtered);
