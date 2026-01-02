@@ -12,7 +12,8 @@
             --beauty-color: #ffafcc; --goody-color: #a2d2ff;
             --soft-shadow: 0 10px 30px rgba(0,0,0,0.06);
         }
-        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.8; }
+        /* 優化整體行距 */
+        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.9; }
         .container { max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -32,7 +33,7 @@
         .category-nav { background: #fff; padding: 25px 20px; border-radius: 25px; box-shadow: var(--soft-shadow); margin-bottom: 25px; text-align: center; }
         .nav-title { font-size: 16px; color: #444; margin-bottom: 20px; display: block; font-weight: bold; }
         .nav-tags { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .nav-item { background: white; border: 1.5px solid #eee; padding: 15px 10px; border-radius: 15px; cursor: pointer; font-size: 15px; font-weight: 500; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .nav-item { background: white; border: 1px solid #eee; padding: 15px 10px; border-radius: 15px; cursor: pointer; font-size: 15px; font-weight: 500; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; gap: 6px; }
         .nav-item:active { transform: scale(0.95); background: #fafafa; }
         .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-weight: bold; font-size: 14px; }
 
@@ -49,12 +50,33 @@
         .card.goody { border-top-color: var(--goody-color); }
         .swiper { width: 100%; height: 350px; border-radius: 20px; margin-bottom: 20px; background: #f0f0f0; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
-        .card h2 { margin: 0 0 12px 0; color: #444; font-size: 1.4em; display: flex; align-items: center; justify-content: space-between; }
-        .copy-icon { font-size: 16px; color: #ddd; cursor: pointer; }
         
-        .btn-link { display: inline-flex; align-items: center; background: var(--main-color); color: white !important; padding: 10px 22px; border-radius: 30px; text-decoration: none; font-size: 14px; font-weight: bold; gap: 8px; white-space: nowrap; }
+        .card h2 { margin: 0 0 12px 0; color: #444; font-size: 1.4em; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+        
+        /* 點擊複製樣式 */
+        .copy-btn-wrapper { font-size: 12px; color: #aaa; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: normal; }
+        .copy-btn-wrapper:active { color: var(--main-color); }
+
+        .info-row { font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; line-height: 1.6; }
+        
+        /* 修改按鈕色塊：改為寬度自適應 (width: fit-content) */
+        .btn-link { 
+            display: inline-flex; 
+            align-items: center; 
+            background: var(--main-color); 
+            color: white !important; 
+            padding: 8px 16px; 
+            border-radius: 30px; 
+            text-decoration: none; 
+            font-size: 13.5px; 
+            font-weight: bold; 
+            gap: 6px; 
+            white-space: nowrap;
+            width: fit-content; /* 讓色塊剛好包住文字 */
+        }
+        
         .recommender-badge { background: #f8f1e7; color: var(--main-color); padding: 3px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
-        .comment-box { background: #fdfcf6; padding: 18px; border-radius: 10px; border-left: 4px solid var(--main-color); margin-top: 15px; font-size: 15px; color: #555; }
+        .comment-box { background: #fdfcf6; padding: 20px; border-radius: 15px; border-left: 4px solid var(--main-color); margin-top: 15px; font-size: 15px; color: #555; line-height: 1.8; }
         
         .floating-ig { position: fixed; bottom: 25px; right: 20px; z-index: 9999; background: linear-gradient(45deg, #f09433 0%, #bc1888 100%); color: white; padding: 12px 22px; border-radius: 50px; text-decoration: none; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.25); font-size: 15px; font-weight: bold; }
     </style>
@@ -83,7 +105,7 @@
         <div id="searchView" class="view fade-in">
             <div class="filter-section">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="直接打店名或地區（如：台南早午餐）" oninput="filterData()">
+                    <input type="text" id="searchInput" placeholder="搜尋店名、評價、地區..." oninput="filterData()">
                 </div>
                 <div id="tagList" class="tag-cloud"></div>
                 <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
@@ -107,7 +129,7 @@
         const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv`;
         let allData = [];
         let activeTags = new Set();
-        let uniqueTagsList = []; // 用來存所有的標籤和地區詞
+        let uniqueTagsList = [];
 
         async function fetchData() {
             Papa.parse(csvUrl, {
@@ -122,7 +144,6 @@
                         imgs: row['圖片網址'] ? row['圖片網址'].split(/[;；]/).map(i => i.trim()) : []
                     })).filter(item => item.name);
                     
-                    // 建立一個完整的標籤/地區字典，供搜尋引擎拆解使用
                     const tagSet = new Set();
                     allData.forEach(item => {
                         item.tags.forEach(t => tagSet.add(t.toLowerCase()));
@@ -137,7 +158,7 @@
         }
 
         function switchMode(mode) {
-            activeTags.clear();
+            currentMode = mode; currentPath = []; activeTags.clear();
             document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`btn-${mode}`).classList.add('active');
@@ -146,7 +167,7 @@
                 renderTags(); renderCards(allData);
             } else {
                 document.getElementById('categoryView').style.display = 'block';
-                currentPath = (mode === 'goody') ? ['好物'] : [];
+                if (mode === 'goody') currentPath = ['好物'];
                 renderNav(mode);
             }
         }
@@ -185,7 +206,7 @@
             filteredList.forEach(item => { const nextLvl = item.regionLevels[currentPath.length]; if (nextLvl) options.add(nextLvl); });
             
             let titleText = (mode === 'food') ? "要去哪裡玩？" : "這次想買什麼？";
-            let canGoBack = currentPath.length > (mode === 'goody' ? 1 : 0);
+            let canGoBack = currentPath.length > (currentMode === 'goody' ? 1 : 0);
             navBreadcrumb.innerHTML = canGoBack ? `<span class="back-btn" onclick="goBack('${mode}')">← 返回上一層</span>` : `<span class="nav-title">${titleText}</span>`;
             
             navContent.innerHTML = '';
@@ -197,7 +218,7 @@
                 btn.onclick = () => { currentPath.push(opt); renderNav(mode); };
                 navContent.appendChild(btn);
             });
-            if (currentPath.length > (mode === 'goody' ? 1 : 0)) renderCards(filteredList);
+            if (currentPath.length > (currentMode === 'goody' ? 1 : 0)) renderCards(filteredList);
             else renderCards([]);
         }
 
@@ -209,7 +230,18 @@
 
         function renderCards(data) {
             const list = document.getElementById('list');
-            list.innerHTML = data.length ? '' : '<p style="text-align:center; padding:20px; color:#999;">沒有找到符合的項目 :(</p>';
+            list.innerHTML = '';
+            
+            // 修正點：在分類導覽模式下，如果尚未選到最後一層，不顯示「查無資料」
+            if (data.length === 0) {
+                if (document.getElementById('categoryView').style.display === 'block') {
+                    list.innerHTML = ''; 
+                } else {
+                    list.innerHTML = '<p style="text-align:center; padding:20px; color:#999;">沒有找到符合的項目 :(</p>';
+                }
+                return;
+            }
+
             data.forEach((item, index) => {
                 let cardClass = "card", btnText = "點我開啟地圖", icon = "fa-map-marker-alt";
                 if (item.rawRegion.includes("美妝") || item.rawRegion.includes("好物")) {
@@ -220,48 +252,42 @@
                 card.className = cardClass;
                 let swiperHtml = item.imgs.length > 0 && item.imgs[0] ? `<div class="swiper swiper-${index}"><div class="swiper-wrapper">${item.imgs.map(img => `<div class="swiper-slide"><img src="${img}"></div>`).join('')}</div><div class="swiper-pagination"></div></div>` : '';
                 const linkHtml = item.address.startsWith('http') ? `<a href="${item.address}" target="_blank" class="btn-link"><i class="fas ${icon}"></i> ${btnText}</a>` : `<span>${item.address}</span>`;
-                card.innerHTML = `${swiperHtml}<h2>${item.name} <i class="far fa-copy copy-icon" onclick="copyToClipboard('${item.name}')"></i></h2><div class="info-row">${linkHtml}</div><div class="info-row">來自 <span class="recommender-badge">${item.recommender}</span> 的推薦</div><div class="comment-box">${item.content}</div>`;
+                
+                // 這裡加入了「點擊複製」文字與圖示
+                card.innerHTML = `
+                    ${swiperHtml}
+                    <h2>
+                        ${item.name} 
+                        <span class="copy-btn-wrapper" onclick="copyToClipboard('${item.name}')">
+                            點擊複製 <i class="far fa-copy"></i>
+                        </span>
+                    </h2>
+                    <div class="info-row">${linkHtml}</div>
+                    <div class="info-row">來自 <span class="recommender-badge">${item.recommender}</span> 的推薦</div>
+                    <div class="comment-box">${item.content}</div>
+                `;
                 list.appendChild(card);
                 if (item.imgs.length > 1) new Swiper(`.swiper-${index}`, { pagination: { el: '.swiper-pagination', clickable: true } });
             });
         }
 
-        /* --- 終極版智慧語意搜尋 --- */
         function filterData() {
             const rawInput = document.getElementById('searchInput').value.toLowerCase().trim();
-            
-            // 如果沒輸入，只根據標籤篩選
             if (rawInput === "") {
                 const filtered = allData.filter(item => activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t)));
                 renderCards(filtered);
                 return;
             }
-
-            // 1. 先嘗試用空格拆分
             let searchTerms = rawInput.split(/\s+/).filter(t => t !== "");
-
-            // 2. 如果只有一個詞且長度大於 3 (例如 "台南早午餐")，我們手動做字典拆分
             if (searchTerms.length === 1 && rawInput.length >= 4) {
                 const autoSplitTerms = [];
-                // 比對資料庫中現有的標籤或地區名，看有沒有包含在使用者打的字裡
-                uniqueTagsList.forEach(knownTag => {
-                    if (rawInput.includes(knownTag)) {
-                        autoSplitTerms.push(knownTag);
-                    }
-                });
-                // 如果拆出了多個關鍵字，就用拆開的結果搜
+                uniqueTagsList.forEach(knownTag => { if (rawInput.includes(knownTag)) autoSplitTerms.push(knownTag); });
                 if (autoSplitTerms.length > 1) searchTerms = autoSplitTerms;
             }
-
             const filtered = allData.filter(item => {
-                const searchableText = [
-                    item.name, item.content, item.rawRegion, ...item.tags
-                ].join(' ').toLowerCase();
-
-                // 必須滿足所有拆開後的關鍵字 (AND 邏輯)
+                const searchableText = [item.name, item.content, item.rawRegion, ...item.tags].join(' ').toLowerCase();
                 const isMatchText = searchTerms.every(term => searchableText.includes(term));
                 const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
-                
                 return isMatchText && matchTags;
             });
             renderCards(filtered);
