@@ -8,100 +8,78 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         :root { 
-            --main-color: #d4a373; --bg-color: #fefae0; --text-color: #606c38;
-            --beauty-color: #ffafcc; --goody-color: #a2d2ff;
-            --soft-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            --main-color: #d4a373; 
+            --bg-color: #fefae0; 
+            --text-color: #606c38;
+            --beauty-color: #ffafcc; 
+            --goody-color: #a2d2ff;
+            --soft-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            --btn-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.9; }
+        body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.8; }
         .container { max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.4s ease forwards; }
+        .fade-in { animation: fadeIn 0.5s ease forwards; }
 
-        header { display: flex; align-items: center; justify-content: center; width: fit-content; margin: 20px auto 30px; gap: 20px; }
-        .avatar { width: 90px; height: 90px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); object-fit: cover; flex-shrink: 0; }
+        /* Header 排版：佔比 1/3，左圖右字 */
+        header { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            width: fit-content;
+            margin: 40px auto;
+            gap: 25px; 
+        }
+        .avatar { 
+            width: 110px; 
+            height: 110px; 
+            border-radius: 50%; 
+            border: 3px solid white; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            object-fit: cover; 
+            flex-shrink: 0; 
+        }
         .header-text { display: flex; flex-direction: column; text-align: left; }
         .header-text h1 { margin: 0; }
-        .header-text h1 a { color: var(--main-color); text-decoration: none; font-size: 26px; font-weight: bold; }
-        /* 副標題更新 */
-        .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.85; font-weight: 500; }
+        .header-text h1 a { color: var(--main-color); text-decoration: none; font-size: 28px; font-weight: bold; letter-spacing: 1px; }
+        .subtitle { margin: 2px 0 0 0; font-size: 15px; opacity: 0.7; white-space: nowrap; }
 
-        .mode-switch { display: flex; justify-content: center; margin-bottom: 35px; gap: 8px; flex-wrap: wrap; }
-        .mode-btn { background: white; border: 1.5px solid #e9edc9; color: var(--main-color); padding: 12px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 15px; flex: 1; min-width: 100px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        /* 模式切換 */
+        .mode-switch { display: flex; justify-content: center; margin-bottom: 25px; gap: 8px; flex-wrap: wrap; }
+        .mode-btn { background: white; border: 1px solid #e9edc9; color: var(--main-color); padding: 10px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 14px; flex: 1; min-width: 100px; text-align: center; box-shadow: var(--btn-shadow); }
         .mode-btn.active { background: var(--main-color); color: white; border-color: var(--main-color); }
 
-        /* --- 恢復妳要的大白框搜尋區域樣式 --- */
-        .filter-section, .category-nav { 
-            background: #fff; 
-            padding: 30px 25px; /* 增加內距讓框感更明顯 */
-            border-radius: 30px; 
-            box-shadow: var(--soft-shadow); 
-            margin-bottom: 35px; 
-        }
+        /* 分類方格 */
+        .category-nav { background: #fff; padding: 20px; border-radius: 20px; box-shadow: var(--soft-shadow); margin-bottom: 20px; text-align: center; }
+        .nav-tags { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; justify-content: center; }
+        .nav-item { background: white; border: 1px solid #eee; padding: 15px 10px; border-radius: 15px; cursor: pointer; font-size: 15px; font-weight: 500; transition: 0.2s; box-shadow: var(--btn-shadow); display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .nav-item:active { transform: scale(0.95); background: var(--bg-color); }
+        .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-size: 14px; font-weight: bold; }
 
-        .search-container { position: relative; width: 100%; margin-bottom: 15px; }
-        
-        /* 搜尋輸入框恢復原本的大氣大小 */
-        .search-box input { 
-            width: 100%; 
-            padding: 18px 25px; /* 更大的輸入空間 */
-            border: 1.5px solid #eee; 
-            border-radius: 35px; 
-            box-sizing: border-box; 
-            outline: none; 
-            font-size: 18px; /* 字體調回大尺寸 */
-            background: #fafafa; 
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
-            transition: 0.3s;
-        }
-        
-        /* 數量泡泡漂浮在最右側，不影響輸入框空間 */
-        .result-count { 
-            position: absolute; 
-            right: 15px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            background: var(--main-color); 
-            color: white; 
-            font-size: 13px; 
-            padding: 4px 12px; 
-            border-radius: 15px; 
-            font-weight: bold; 
-            opacity: 0; 
-            transition: opacity 0.3s;
-            pointer-events: none;
-            z-index: 5;
-        }
-        .result-count.show { opacity: 1; }
-
-        /* 標籤雲與方格分類 */
-        .nav-title { font-size: 16px; color: #444; margin-bottom: 20px; display: block; font-weight: bold; text-align: center; }
-        .nav-tags { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .nav-item { background: white; border: 1.5px solid #eee; padding: 18px 10px; border-radius: 18px; cursor: pointer; font-size: 16px; font-weight: 500; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .nav-item:active { transform: scale(0.95); background: #fafafa; }
-        .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-weight: bold; font-size: 14px; }
-
-        .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 52px; transition: max-height 0.3s; }
+        /* 搜尋框回歸原始大小 */
+        .filter-section { background: #fff; padding: 15px; border-radius: 15px; box-shadow: var(--soft-shadow); margin-bottom: 20px; }
+        .search-box input { width: 100%; padding: 10px 15px; border: 2px solid #e9edc9; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 14px; margin-bottom: 12px; }
+        .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 48px; transition: max-height 0.3s; }
         .tag-cloud.expanded { max-height: 1000px; }
-        .tag-btn { background: #e9edc9; border: none; padding: 8px 16px; border-radius: 18px; cursor: pointer; font-size: 14px; color: var(--text-color); transition: 0.2s; }
+        .tag-btn { background: #e9edc9; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 13px; color: var(--text-color); }
         .tag-btn.active { background: var(--main-color); color: white; }
-        .toggle-tags-btn { text-align: right; font-size: 13px; color: var(--main-color); cursor: pointer; margin-top: 15px; font-weight: bold; }
+        .toggle-tags-btn { text-align: right; font-size: 12px; color: var(--main-color); cursor: pointer; margin-top: 5px; font-weight: bold; }
 
-        /* 卡片內容排版 */
-        .card { background: white; border-radius: 30px; padding: 30px; margin-bottom: 35px; box-shadow: var(--soft-shadow); border-top: 12px solid var(--main-color); position: relative; }
+        /* 卡片設計 */
+        .card { background: white; border-radius: 25px; padding: 25px; margin-bottom: 25px; box-shadow: var(--soft-shadow); border-top: 12px solid var(--main-color); position: relative; }
         .card.beauty { border-top-color: var(--beauty-color); }
         .card.goody { border-top-color: var(--goody-color); }
-        .swiper { width: 100%; height: 350px; border-radius: 25px; margin-bottom: 25px; background: #f0f0f0; }
+        .swiper { width: 100%; height: 350px; border-radius: 18px; margin-bottom: 18px; background: #eee; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
-        .card h2 { margin: 0 0 15px 0; color: #444; font-size: 1.5em; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-        .copy-btn-wrapper { font-size: 12px; color: #aaa; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: normal; }
+        .card h2 { margin: 0 0 12px 0; color: #444; font-size: 1.3em; display: flex; align-items: center; justify-content: space-between; }
+        .copy-icon { font-size: 14px; color: #ccc; cursor: pointer; padding: 5px; }
+        .btn-link { display: inline-flex; align-items: center; background: var(--main-color); color: white !important; padding: 8px 20px; border-radius: 30px; text-decoration: none; font-size: 13.5px; font-weight: bold; gap: 8px; }
+        .recommender-badge { background: #f8f1e7; color: var(--main-color); padding: 2px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
+        .comment-box { background: #fdfcf6; padding: 18px; border-radius: 10px; border-left: 3px solid var(--main-color); margin-top: 15px; font-size: 14px; color: #555; line-height: 1.8; white-space: pre-wrap; }
         
-        .info-row { font-size: 15px; margin-bottom: 15px; display: flex; align-items: center; }
-        .btn-link { display: inline-flex; align-items: center; background: var(--main-color); color: white !important; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-size: 14px; font-weight: bold; gap: 8px; width: fit-content; }
-        .recommender-badge { background: #f8f1e7; color: var(--main-color); padding: 4px 14px; border-radius: 10px; font-size: 14px; font-weight: bold; }
-        .comment-box { background: #fdfcf6; padding: 25px; border-radius: 20px; border-left: 5px solid var(--main-color); margin-top: 20px; font-size: 16px; color: #555; line-height: 1.8; }
-        
-        .floating-ig { position: fixed; bottom: 25px; right: 20px; z-index: 9999; background: linear-gradient(45deg, #f09433 0%, #bc1888 100%); color: white; padding: 12px 22px; border-radius: 50px; text-decoration: none; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.25); font-size: 15px; font-weight: bold; }
+        /* 懸浮 IG 按鈕 */
+        .floating-ig { position: fixed; bottom: 25px; right: 20px; z-index: 9999; background: linear-gradient(45deg, #f09433 0%, #bc1888 100%); color: white; padding: 10px 20px; border-radius: 50px; text-decoration: none; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); font-size: 14px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -115,7 +93,7 @@
             <img src="https://github.com/star979006-bit/Osacnail_map/blob/main/images/69DDDCFE-1088-4783-A970-6C825AAB9AE2.png?raw=true" class="avatar">
             <div class="header-text">
                 <h1><a href="https://www.instagram.com/osac_nail2024?igsh=MWtpcmwzeGJqNmE2OQ%3D%3D&utm_source=qr" target="_blank">osac_nail2024</a></h1>
-                <p class="subtitle">𖤐一群小女生的口袋名單⸝⸝꙳</p>
+                <p class="subtitle">一群小女生的口袋名單</p>
             </div>
         </header>
 
@@ -127,9 +105,8 @@
 
         <div id="searchView" class="view fade-in">
             <div class="filter-section">
-                <div class="search-container">
-                    <input type="text" id="searchInput" placeholder="搜尋店名、評價、地區..." oninput="filterData()">
-                    <span id="resultCounter" class="result-count">0</span>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="搜尋店名、評價或關鍵字..." onkeyup="filterData()">
                 </div>
                 <div id="tagList" class="tag-cloud"></div>
                 <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
@@ -143,7 +120,7 @@
             </div>
         </div>
 
-        <div id="list" class="fade-in"></div>
+        <div id="list" class="fade-in">正在準備清單...</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -153,7 +130,8 @@
         const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv`;
         let allData = [];
         let activeTags = new Set();
-        let uniqueTagsList = [];
+        let currentMode = 'search';
+        let currentPath = [];
 
         async function fetchData() {
             Papa.parse(csvUrl, {
@@ -167,14 +145,6 @@
                         content: row['評價內容'] || '',
                         imgs: row['圖片網址'] ? row['圖片網址'].split(/[;；]/).map(i => i.trim()) : []
                     })).filter(item => item.name);
-                    
-                    const tagSet = new Set();
-                    allData.forEach(item => {
-                        item.tags.forEach(t => tagSet.add(t.toLowerCase()));
-                        item.regionLevels.forEach(r => tagSet.add(r.toLowerCase()));
-                    });
-                    uniqueTagsList = Array.from(tagSet);
-
                     renderTags();
                     renderCards(allData);
                 }
@@ -182,7 +152,7 @@
         }
 
         function switchMode(mode) {
-            activeTags.clear();
+            currentMode = mode; currentPath = []; activeTags.clear();
             document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`btn-${mode}`).classList.add('active');
@@ -191,8 +161,8 @@
                 renderTags(); renderCards(allData);
             } else {
                 document.getElementById('categoryView').style.display = 'block';
-                currentPath = (mode === 'goody') ? ['好物'] : [];
-                renderNav(mode);
+                if (mode === 'goody') currentPath = ['好物'];
+                renderNav();
             }
         }
 
@@ -206,7 +176,7 @@
                 btn.className = `tag-btn ${activeTags.has(tag) ? 'active' : ''}`;
                 btn.innerText = tag;
                 btn.onclick = () => { 
-                    if(activeTags.has(tag)) activeTags.delete(tag); else activeTags.add(tag);
+                    activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag); 
                     btn.classList.toggle('active');
                     filterData(); 
                 };
@@ -220,102 +190,72 @@
             document.getElementById('toggleBtn').innerText = cloud.classList.contains('expanded') ? "收合標籤" : "更多標籤...";
         }
 
-        function renderNav(mode) {
+        function renderNav() {
             const navContent = document.getElementById('navContent');
             const navBreadcrumb = document.getElementById('navBreadcrumb');
             let filteredList = allData;
-            if (mode === 'food') filteredList = filteredList.filter(item => item.regionLevels[0] !== '好物');
+            if (currentMode === 'food') filteredList = filteredList.filter(item => item.regionLevels[0] !== '好物');
             currentPath.forEach((lvl, idx) => { filteredList = filteredList.filter(item => item.regionLevels[idx] === lvl); });
             let options = new Set();
             filteredList.forEach(item => { const nextLvl = item.regionLevels[currentPath.length]; if (nextLvl) options.add(nextLvl); });
-            
-            let titleText = (mode === 'food') ? "要去哪裡玩？" : "這次想買什麼？";
-            let canGoBack = currentPath.length > (mode === 'goody' ? 1 : 0);
-            navBreadcrumb.innerHTML = canGoBack ? `<span class="back-btn" onclick="goBack('${mode}')">← 返回上一層</span>` : `<span class="nav-title">${titleText}</span>`;
-            
+            let canGoBack = currentPath.length > (currentMode === 'goody' ? 1 : 0);
+            navBreadcrumb.innerHTML = canGoBack ? `<span class="back-btn" onclick="goBack()">← 返回上一層</span>` : `<span class="nav-title">請選擇類別</span>`;
             navContent.innerHTML = '';
             options.forEach(opt => {
                 const btn = document.createElement('div');
                 btn.className = 'nav-item';
-                let icon = opt === "台灣" ? "🇹🇼 " : (opt === "日本" ? "🇯🇵 " : "");
-                btn.innerHTML = `${icon}${opt}`;
-                btn.onclick = () => { currentPath.push(opt); renderNav(mode); };
+                let prefix = "";
+                if (opt === "台灣") prefix = "🇹🇼 ";
+                if (opt === "日本") prefix = "🇯🇵 ";
+                btn.innerHTML = `${prefix}${opt}`;
+                btn.onclick = () => { currentPath.push(opt); renderNav(); };
                 navContent.appendChild(btn);
             });
             if (currentPath.length > (currentMode === 'goody' ? 1 : 0)) renderCards(filteredList);
             else renderCards([]);
         }
 
-        function goBack(mode) { currentPath.pop(); renderNav(mode); }
+        function goBack() { currentPath.pop(); renderNav(); }
 
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => { alert('已複製: ' + text); });
+            navigator.clipboard.writeText(text).then(() => { alert('已複製名稱: ' + text); });
         }
 
         function renderCards(data) {
             const list = document.getElementById('list');
             list.innerHTML = '';
-            
-            if (data.length === 0 && document.getElementById('categoryView').style.display !== 'block') {
-                list.innerHTML = '<p style="text-align:center; padding:20px; color:#999;">沒有找到符合的項目 :(</p>';
-                return;
-            }
-
             data.forEach((item, index) => {
                 let cardClass = "card", btnText = "點我開啟地圖", icon = "fa-map-marker-alt";
                 if (item.rawRegion.includes("美妝") || item.rawRegion.includes("好物")) {
                     btnText = "撒錢連結這邊請 (慎點"; icon = "fa-shopping-cart";
-                    cardClass += item.rawRegion.includes("美妝") ? " beauty" : " goody";
+                    if (item.rawRegion.includes("美妝")) cardClass += " beauty";
+                    else cardClass += " goody";
                 }
                 const card = document.createElement('div');
                 card.className = cardClass;
                 let swiperHtml = item.imgs.length > 0 && item.imgs[0] ? `<div class="swiper swiper-${index}"><div class="swiper-wrapper">${item.imgs.map(img => `<div class="swiper-slide"><img src="${img}"></div>`).join('')}</div><div class="swiper-pagination"></div></div>` : '';
                 const linkHtml = item.address.startsWith('http') ? `<a href="${item.address}" target="_blank" class="btn-link"><i class="fas ${icon}"></i> ${btnText}</a>` : `<span>${item.address}</span>`;
-                
-                card.innerHTML = `
-                    ${swiperHtml}
-                    <h2>
-                        ${item.name} 
-                        <span class="copy-btn-wrapper" onclick="copyToClipboard('${item.name}')">
-                            點擊複製 <i class="far fa-copy"></i>
-                        </span>
-                    </h2>
-                    <div class="info-row">${linkHtml}</div>
-                    <div class="info-row">來自 <span class="recommender-badge">${item.recommender}</span> 的推薦</div>
-                    <div class="comment-box">${item.content}</div>
-                `;
+                card.innerHTML = `${swiperHtml}<h2>${item.name} <i class="far fa-copy copy-icon" onclick="copyToClipboard('${item.name}')"></i></h2><div class="info-row">${linkHtml}</div><div class="info-row">來自 <span class="recommender-badge">${item.recommender}</span> 的推薦</div><div class="comment-box">${item.content}</div>`;
                 list.appendChild(card);
                 if (item.imgs.length > 1) new Swiper(`.swiper-${index}`, { pagination: { el: '.swiper-pagination', clickable: true } });
             });
         }
 
         function filterData() {
-            const rawInput = document.getElementById('searchInput').value.toLowerCase().trim();
-            const counter = document.getElementById('resultCounter');
-            
-            if (rawInput === "") {
-                const filtered = allData.filter(item => activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t)));
-                counter.classList.remove('show');
-                renderCards(filtered);
-                return;
-            }
-
-            let searchTerms = rawInput.split(/\s+/).filter(t => t !== "");
-            if (searchTerms.length === 1 && rawInput.length >= 4) {
-                const autoSplitTerms = [];
-                uniqueTagsList.forEach(knownTag => { if (rawInput.includes(knownTag)) autoSplitTerms.push(knownTag); });
-                if (autoSplitTerms.length > 1) searchTerms = autoSplitTerms;
-            }
-
+            const rawTerm = document.getElementById('searchInput').value.toLowerCase().trim();
             const filtered = allData.filter(item => {
-                const searchableText = [item.name, item.content, item.rawRegion, ...item.tags].join(' ').toLowerCase();
-                const isMatchText = searchTerms.every(term => searchableText.includes(term));
+                const searchText = (item.name + item.content + item.rawRegion + item.tags.join('')).toLowerCase();
+                let isMatch = false;
+                if (rawTerm === "") { isMatch = true; }
+                else if (searchText.includes(rawTerm)) { isMatch = true; }
+                else {
+                    const keywords = ["台中", "台南", "台北", "高雄", "日本", "東京", "早午餐", "甜點", "咖啡", "美妝", "美甲"];
+                    let matchedKeywords = keywords.filter(k => rawTerm.includes(k.toLowerCase()));
+                    if (matchedKeywords.length > 1) { isMatch = matchedKeywords.every(k => searchText.includes(k.toLowerCase())); }
+                }
                 const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
-                return isMatchText && matchTags;
+                return isMatch && matchTags;
             });
-
-            counter.innerText = filtered.length;
-            counter.classList.add('show');
             renderCards(filtered);
         }
         fetchData();
