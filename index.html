@@ -38,8 +38,11 @@
         .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-size: 14px; font-weight: bold; }
 
         .filter-section { background: #fff; padding: 15px; border-radius: 15px; box-shadow: var(--soft-shadow); margin-bottom: 20px; box-sizing: border-box; }
-        .search-box input { width: 100%; padding: 12px 15px; border: 2px solid #e9edc9; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 14px; display: block; margin-bottom: 12px; }
+        .search-box input { width: 100%; padding: 12px 15px; border: 2px solid #e9edc9; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 14px; display: block; margin-bottom: 8px; }
         
+        /* 資料筆數統計樣式 */
+        .data-count { text-align: right; font-size: 11px; color: #aaa; margin-bottom: 10px; font-weight: bold; }
+
         .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 48px; transition: max-height 0.3s; }
         .tag-cloud.expanded { max-height: 1000px; }
         .tag-btn { background: #e9edc9; border: none; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 13px; color: var(--text-color); }
@@ -51,8 +54,14 @@
         .card.goody { border-top-color: var(--goody-color); }
         .swiper { width: 100%; height: 350px; border-radius: 18px; margin-bottom: 18px; background: #eee; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+        
         .card h2 { margin: 0 0 12px 0; color: #444; font-size: 1.3em; display: flex; align-items: center; justify-content: space-between; }
-        .copy-icon { font-size: 14px; color: #ccc; cursor: pointer; padding: 5px; }
+        
+        /* 複製區塊樣式 */
+        .copy-wrapper { font-size: 12px; color: #bbb; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: normal; }
+        .copy-wrapper:active { color: var(--main-color); }
+
+        .info-row { font-size: 13.5px; margin-bottom: 10px; color: #777; display: flex; align-items: center; gap: 8px; }
         .btn-link { display: inline-flex; align-items: center; background: var(--main-color); color: white !important; padding: 8px 20px; border-radius: 30px; text-decoration: none; font-size: 13.5px; font-weight: bold; gap: 8px; }
         .recommender-badge { background: #f8f1e7; color: var(--main-color); padding: 2px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
         .comment-box { background: #fdfcf6; padding: 18px; border-radius: 10px; border-left: 3px solid var(--main-color); margin-top: 15px; font-size: 14px; color: #555; line-height: 1.8; white-space: pre-wrap; }
@@ -94,6 +103,8 @@
                 <div class="search-box">
                     <input type="text" id="searchInput" placeholder="搜尋區域、店名或評價..." onkeyup="filterData()">
                 </div>
+                <div id="dataCount" class="data-count">總共有 0 筆資料</div>
+                
                 <div id="tagList" class="tag-cloud"></div>
                 <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
             </div>
@@ -142,6 +153,7 @@
                     })).filter(item => item.name);
                     renderTags();
                     renderCards(allData);
+                    updateDataCount(allData.length);
                 }
             });
         }
@@ -154,6 +166,7 @@
             if (mode === 'search') {
                 document.getElementById('searchView').style.display = 'block';
                 renderTags(); renderCards(allData);
+                updateDataCount(allData.length);
             } else {
                 document.getElementById('categoryView').style.display = 'block';
                 if (mode === 'goody') currentPath = ['好物'];
@@ -214,7 +227,12 @@
         function goBack() { currentPath.pop(); renderNav(); }
 
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => { alert('已複製名稱: ' + text); });
+            navigator.clipboard.writeText(text).then(() => { alert('已複製店名: ' + text); });
+        }
+
+        function updateDataCount(count) {
+            const el = document.getElementById('dataCount');
+            if (el) el.innerText = `總共有 ${count} 筆資料`;
         }
 
         function renderCards(data) {
@@ -231,42 +249,29 @@
                 card.className = cardClass;
                 let swiperHtml = item.imgs.length > 0 && item.imgs[0] ? `<div class="swiper swiper-${index}"><div class="swiper-wrapper">${item.imgs.map(img => `<div class="swiper-slide"><img src="${img}"></div>`).join('')}</div><div class="swiper-pagination"></div></div>` : '';
                 const linkHtml = item.address.startsWith('http') ? `<a href="${item.address}" target="_blank" class="btn-link"><i class="fas ${icon}"></i> ${btnText}</a>` : `<span>${item.address}</span>`;
-                card.innerHTML = `${swiperHtml}<h2>${item.name} <i class="far fa-copy copy-icon" onclick="copyToClipboard('${item.name}')"></i></h2><div class="info-row">${linkHtml}</div><div class="info-row">來自 <span class="recommender-badge">${item.recommender}</span> 的推薦</div><div class="comment-box">${item.content}</div>`;
+                
+                card.innerHTML = `${swiperHtml}<h2>${item.name} <div class="copy-wrapper" onclick="copyToClipboard('${item.name}')">點擊複製 <i class="far fa-copy"></i></div></h2><div class="info-row">${linkHtml}</div><div class="info-row">來自 <span class="recommender-badge">${item.recommender}</span> 的推薦</div><div class="comment-box">${item.content}</div>`;
                 list.appendChild(card);
                 if (item.imgs.length > 1) new Swiper(`.swiper-${index}`, { pagination: { el: '.swiper-pagination', clickable: true } });
             });
         }
 
-        /* --- 終極相容搜尋引擎 --- */
         function filterData() {
             const rawTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            
-            if (rawTerm === "") {
-                const filtered = allData.filter(item => activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t)));
-                renderCards(filtered);
-                return;
-            }
-
             const filtered = allData.filter(item => {
                 const searchText = (item.name + item.content + item.rawRegion + item.tags.join(' ')).toLowerCase();
-                
-                // 1. 先嘗試「完整比對」（解決打台中、台南沒反應的問題）
-                if (searchText.includes(rawTerm)) return true;
+                if (rawTerm === "") return activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
 
-                // 2. 如果完整比對沒中，再嘗試拆分比對（解決台南早午餐沒空格的問題）
-                const dictionary = ["台南", "台中", "台北", "高雄", "早午餐", "甜點", "咖啡", "美甲", "美妝", "酒吧", "熱炒"];
-                let foundParts = dictionary.filter(word => rawTerm.includes(word.toLowerCase()));
-                
-                if (foundParts.length > 0) {
-                    return foundParts.every(part => searchText.includes(part));
+                let isMatch = searchText.includes(rawTerm);
+                if (!isMatch) {
+                    const keywords = ["台南", "台中", "台北", "高雄", "早午餐", "甜點", "咖啡", "美妝"];
+                    let parts = keywords.filter(k => rawTerm.includes(k.toLowerCase()));
+                    if (parts.length > 0) isMatch = parts.every(p => searchText.includes(p.toLowerCase()));
                 }
-
-                return false;
+                return isMatch && (activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t)));
             });
-
-            // 套用標籤過濾
-            const finalFiltered = filtered.filter(item => activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t)));
-            renderCards(finalFiltered);
+            renderCards(filtered);
+            updateDataCount(filtered.length);
         }
         fetchData();
     </script>
