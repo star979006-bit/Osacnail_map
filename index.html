@@ -12,7 +12,6 @@
             --beauty-color: #ffafcc; --goody-color: #a2d2ff;
             --soft-shadow: 0 10px 30px rgba(0,0,0,0.06);
         }
-        /* 優化整體行距 */
         body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.9; }
         .container { max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
         
@@ -24,7 +23,7 @@
         .header-text { display: flex; flex-direction: column; text-align: left; }
         .header-text h1 { margin: 0; }
         .header-text h1 a { color: var(--main-color); text-decoration: none; font-size: 24px; font-weight: bold; }
-        .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.7; }
+        .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.85; font-weight: 500; }
 
         .mode-switch { display: flex; justify-content: center; margin-bottom: 35px; gap: 8px; flex-wrap: wrap; }
         .mode-btn { background: white; border: 1.5px solid #e9edc9; color: var(--main-color); padding: 10px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 14px; flex: 1; min-width: 100px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
@@ -33,12 +32,18 @@
         .category-nav { background: #fff; padding: 25px 20px; border-radius: 25px; box-shadow: var(--soft-shadow); margin-bottom: 25px; text-align: center; }
         .nav-title { font-size: 16px; color: #444; margin-bottom: 20px; display: block; font-weight: bold; }
         .nav-tags { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .nav-item { background: white; border: 1px solid #eee; padding: 15px 10px; border-radius: 15px; cursor: pointer; font-size: 15px; font-weight: 500; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .nav-item { background: white; border: 1.5px solid #eee; padding: 15px 10px; border-radius: 15px; cursor: pointer; font-size: 15px; font-weight: 500; transition: 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: center; gap: 6px; }
         .nav-item:active { transform: scale(0.95); background: #fafafa; }
         .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-weight: bold; font-size: 14px; }
 
+        /* --- 搜尋列計數器樣式 --- */
         .filter-section { background: #fff; padding: 20px; border-radius: 25px; box-shadow: var(--soft-shadow); margin-bottom: 25px; }
-        .search-box input { width: 100%; padding: 14px 20px; border: 1.5px solid #eee; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 16px; background: #fafafa; margin-bottom: 15px; }
+        .search-container { position: relative; width: 100%; margin-bottom: 15px; }
+        .search-box input { width: 100%; padding: 14px 60px 14px 20px; border: 1.5px solid #eee; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 16px; background: #fafafa; }
+        
+        .result-count { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: var(--main-color); color: white; font-size: 12px; padding: 2px 10px; border-radius: 12px; font-weight: bold; opacity: 0; transition: opacity 0.3s; }
+        .result-count.show { opacity: 1; }
+
         .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 50px; transition: max-height 0.3s; }
         .tag-cloud.expanded { max-height: 1000px; }
         .tag-btn { background: #e9edc9; border: none; padding: 7px 14px; border-radius: 15px; cursor: pointer; font-size: 13px; color: var(--text-color); transition: 0.2s; }
@@ -50,30 +55,13 @@
         .card.goody { border-top-color: var(--goody-color); }
         .swiper { width: 100%; height: 350px; border-radius: 20px; margin-bottom: 20px; background: #f0f0f0; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
-        
         .card h2 { margin: 0 0 12px 0; color: #444; font-size: 1.4em; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
         
-        /* 點擊複製樣式 */
         .copy-btn-wrapper { font-size: 12px; color: #aaa; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: normal; }
         .copy-btn-wrapper:active { color: var(--main-color); }
 
-        .info-row { font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; line-height: 1.6; }
-        
-        /* 修改按鈕色塊：改為寬度自適應 (width: fit-content) */
-        .btn-link { 
-            display: inline-flex; 
-            align-items: center; 
-            background: var(--main-color); 
-            color: white !important; 
-            padding: 8px 16px; 
-            border-radius: 30px; 
-            text-decoration: none; 
-            font-size: 13.5px; 
-            font-weight: bold; 
-            gap: 6px; 
-            white-space: nowrap;
-            width: fit-content; /* 讓色塊剛好包住文字 */
-        }
+        .info-row { font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; }
+        .btn-link { display: inline-flex; align-items: center; background: var(--main-color); color: white !important; padding: 8px 16px; border-radius: 30px; text-decoration: none; font-size: 13.5px; font-weight: bold; gap: 6px; width: fit-content; }
         
         .recommender-badge { background: #f8f1e7; color: var(--main-color); padding: 3px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
         .comment-box { background: #fdfcf6; padding: 20px; border-radius: 15px; border-left: 4px solid var(--main-color); margin-top: 15px; font-size: 15px; color: #555; line-height: 1.8; }
@@ -92,7 +80,7 @@
             <img src="https://github.com/star979006-bit/Osacnail_map/blob/main/images/69DDDCFE-1088-4783-A970-6C825AAB9AE2.png?raw=true" class="avatar">
             <div class="header-text">
                 <h1><a href="https://www.instagram.com/osac_nail2024?igsh=MWtpcmwzeGJqNmE2OQ%3D%3D&utm_source=qr" target="_blank">osac_nail2024</a></h1>
-                <p class="subtitle">一群小女生的口袋名單</p>
+                <p class="subtitle">𖤐一群小女生的口袋名單⸝⸝꙳</p>
             </div>
         </header>
 
@@ -104,8 +92,9 @@
 
         <div id="searchView" class="view fade-in">
             <div class="filter-section">
-                <div class="search-box">
+                <div class="search-container">
                     <input type="text" id="searchInput" placeholder="搜尋店名、評價、地區..." oninput="filterData()">
+                    <span id="resultCounter" class="result-count">0</span>
                 </div>
                 <div id="tagList" class="tag-cloud"></div>
                 <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
@@ -158,7 +147,7 @@
         }
 
         function switchMode(mode) {
-            currentMode = mode; currentPath = []; activeTags.clear();
+            activeTags.clear();
             document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`btn-${mode}`).classList.add('active');
@@ -167,7 +156,7 @@
                 renderTags(); renderCards(allData);
             } else {
                 document.getElementById('categoryView').style.display = 'block';
-                if (mode === 'goody') currentPath = ['好物'];
+                currentPath = (mode === 'goody') ? ['好物'] : [];
                 renderNav(mode);
             }
         }
@@ -206,7 +195,7 @@
             filteredList.forEach(item => { const nextLvl = item.regionLevels[currentPath.length]; if (nextLvl) options.add(nextLvl); });
             
             let titleText = (mode === 'food') ? "要去哪裡玩？" : "這次想買什麼？";
-            let canGoBack = currentPath.length > (currentMode === 'goody' ? 1 : 0);
+            let canGoBack = currentPath.length > (mode === 'goody' ? 1 : 0);
             navBreadcrumb.innerHTML = canGoBack ? `<span class="back-btn" onclick="goBack('${mode}')">← 返回上一層</span>` : `<span class="nav-title">${titleText}</span>`;
             
             navContent.innerHTML = '';
@@ -218,7 +207,7 @@
                 btn.onclick = () => { currentPath.push(opt); renderNav(mode); };
                 navContent.appendChild(btn);
             });
-            if (currentPath.length > (currentMode === 'goody' ? 1 : 0)) renderCards(filteredList);
+            if (currentPath.length > (mode === 'goody' ? 1 : 0)) renderCards(filteredList);
             else renderCards([]);
         }
 
@@ -232,13 +221,8 @@
             const list = document.getElementById('list');
             list.innerHTML = '';
             
-            // 修正點：在分類導覽模式下，如果尚未選到最後一層，不顯示「查無資料」
-            if (data.length === 0) {
-                if (document.getElementById('categoryView').style.display === 'block') {
-                    list.innerHTML = ''; 
-                } else {
-                    list.innerHTML = '<p style="text-align:center; padding:20px; color:#999;">沒有找到符合的項目 :(</p>';
-                }
+            if (data.length === 0 && document.getElementById('categoryView').style.display !== 'block') {
+                list.innerHTML = '<p style="text-align:center; padding:20px; color:#999;">沒有找到符合的項目 :(</p>';
                 return;
             }
 
@@ -253,7 +237,6 @@
                 let swiperHtml = item.imgs.length > 0 && item.imgs[0] ? `<div class="swiper swiper-${index}"><div class="swiper-wrapper">${item.imgs.map(img => `<div class="swiper-slide"><img src="${img}"></div>`).join('')}</div><div class="swiper-pagination"></div></div>` : '';
                 const linkHtml = item.address.startsWith('http') ? `<a href="${item.address}" target="_blank" class="btn-link"><i class="fas ${icon}"></i> ${btnText}</a>` : `<span>${item.address}</span>`;
                 
-                // 這裡加入了「點擊複製」文字與圖示
                 card.innerHTML = `
                     ${swiperHtml}
                     <h2>
@@ -273,23 +256,32 @@
 
         function filterData() {
             const rawInput = document.getElementById('searchInput').value.toLowerCase().trim();
+            const counter = document.getElementById('resultCounter');
+            
             if (rawInput === "") {
                 const filtered = allData.filter(item => activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t)));
+                counter.classList.remove('show');
                 renderCards(filtered);
                 return;
             }
+
             let searchTerms = rawInput.split(/\s+/).filter(t => t !== "");
             if (searchTerms.length === 1 && rawInput.length >= 4) {
                 const autoSplitTerms = [];
                 uniqueTagsList.forEach(knownTag => { if (rawInput.includes(knownTag)) autoSplitTerms.push(knownTag); });
                 if (autoSplitTerms.length > 1) searchTerms = autoSplitTerms;
             }
+
             const filtered = allData.filter(item => {
                 const searchableText = [item.name, item.content, item.rawRegion, ...item.tags].join(' ').toLowerCase();
                 const isMatchText = searchTerms.every(term => searchableText.includes(term));
                 const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
                 return isMatchText && matchTags;
             });
+
+            // 更新計數器
+            counter.innerText = filtered.length;
+            counter.classList.add('show');
             renderCards(filtered);
         }
         fetchData();
