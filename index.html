@@ -8,17 +8,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         :root { 
-            --main-color: #d4a373; 
-            --bg-color: #fefae0; 
-            --text-color: #606c38;
-            --beauty-color: #ffafcc; 
-            --goody-color: #a2d2ff;
+            --main-color: #d4a373; --bg-color: #fefae0; --text-color: #606c38;
+            --beauty-color: #ffafcc; --goody-color: #a2d2ff;
             --soft-shadow: 0 10px 30px rgba(0,0,0,0.04);
         }
         body { font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; line-height: 1.8; }
         .container { max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
         
-        /* 動畫：淡入效果 */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .fade-in { animation: fadeIn 0.5s ease forwards; }
 
@@ -30,42 +26,36 @@
         .subtitle { margin: 2px 0 0 0; font-size: 14px; opacity: 0.7; white-space: nowrap; }
 
         /* 模式切換按鈕 */
-        .mode-switch { display: flex; justify-content: center; margin-bottom: 25px; gap: 10px; }
-        .mode-btn { background: white; border: 1px solid #e9edc9; color: #999; padding: 10px 18px; border-radius: 25px; cursor: pointer; font-size: 14px; transition: 0.3s; box-shadow: var(--soft-shadow); }
+        .mode-switch { display: flex; justify-content: center; margin-bottom: 25px; gap: 8px; flex-wrap: wrap; }
+        .mode-btn { background: white; border: 1px solid #e9edc9; color: var(--main-color); padding: 8px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; font-size: 14px; flex: 1; min-width: 100px; text-align: center; }
         .mode-btn.active { background: var(--main-color); color: white; border-color: var(--main-color); }
 
-        /* 導覽容器 */
+        /* 分類導覽樣式 */
         .category-nav { background: #fff; padding: 20px; border-radius: 20px; box-shadow: var(--soft-shadow); margin-bottom: 20px; text-align: center; }
-        .nav-item { background: #fdfdfd; border: 1px solid #eee; padding: 12px 20px; border-radius: 15px; cursor: pointer; font-size: 14px; transition: 0.2s; }
-        .nav-item:active { background: #f0f0f0; transform: scale(0.95); }
-        .back-btn { color: var(--main-color); cursor: pointer; display: inline-block; margin-bottom: 15px; font-size: 14px; font-weight: bold; }
+        .nav-tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .nav-item { background: #fdfdfd; border: 1px solid #eee; padding: 10px 20px; border-radius: 15px; cursor: pointer; font-size: 14px; transition: 0.2s; }
+        .nav-item:active { transform: scale(0.95); background: #f0f0f0; }
 
-        /* 搜尋區 */
+        /* 搜尋與標籤雲區 */
         .filter-section { background: #fff; padding: 18px; border-radius: 20px; box-shadow: var(--soft-shadow); margin-bottom: 20px; }
-        .search-box input { width: 100%; padding: 12px 20px; border: 1px solid #eee; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 15px; background: #fafafa; }
+        .search-box input { width: 100%; padding: 12px 20px; border: 1px solid #eee; border-radius: 25px; box-sizing: border-box; outline: none; font-size: 15px; background: #fafafa; margin-bottom: 15px; }
+        .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; overflow: hidden; max-height: 48px; transition: max-height 0.3s; }
+        .tag-cloud.expanded { max-height: 1000px; }
+        .tag-btn { background: #e9edc9; border: none; padding: 6px 14px; border-radius: 15px; cursor: pointer; font-size: 13px; color: var(--text-color); }
+        .tag-btn.active { background: var(--main-color); color: white; }
+        .toggle-tags-btn { text-align: right; font-size: 12px; color: var(--main-color); cursor: pointer; margin-top: 8px; font-weight: bold; }
 
-        /* 卡片與內容 */
+        /* 卡片設定 */
         .card { background: white; border-radius: 25px; padding: 25px; margin-bottom: 25px; box-shadow: var(--soft-shadow); border-top: 12px solid var(--main-color); position: relative; }
         .card.beauty { border-top-color: var(--beauty-color); }
         .card.goody { border-top-color: var(--goody-color); }
-        
-        .swiper { width: 100%; height: 350px; border-radius: 18px; margin-bottom: 18px; }
+        .swiper { width: 100%; height: 350px; border-radius: 18px; margin-bottom: 18px; background: #eee; }
         .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
-        
         .card h2 { margin: 0 0 12px 0; color: #444; font-size: 1.3em; display: flex; align-items: center; justify-content: space-between; }
         .copy-icon { font-size: 14px; color: #ccc; cursor: pointer; padding: 5px; }
-        .copy-icon:active { color: var(--main-color); }
-
-        .info-row { font-size: 13.5px; margin-bottom: 10px; color: #777; display: flex; align-items: center; gap: 8px; }
-        .btn-link { display: inline-flex; align-items: center; background: var(--main-color); color: white !important; padding: 8px 20px; border-radius: 30px; text-decoration: none; font-size: 13px; font-weight: bold; margin-bottom: 5px; }
-        
-        /* 推薦人勳章 */
-        .recommender-badge { background: #f8f1e7; color: var(--main-color); padding: 2px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; display: inline-block; }
-        .beauty .recommender-badge { background: #fff0f5; color: #ff85a1; }
-        .goody .recommender-badge { background: #eef6ff; color: #72aee6; }
-
-        .comment-box { background: #fdfcf6; padding: 18px; border-radius: 15px; border-left: 3px solid var(--main-color); margin-top: 15px; font-size: 14px; color: #555; line-height: 1.7; }
-        
+        .btn-link { display: inline-flex; align-items: center; background: var(--main-color); color: white !important; padding: 8px 20px; border-radius: 30px; text-decoration: none; font-size: 13.5px; font-weight: bold; gap: 8px; }
+        .recommender-badge { background: #f8f1e7; color: var(--main-color); padding: 2px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; }
+        .comment-box { background: #fdfcf6; padding: 18px; border-radius: 15px; border-left: 3px solid var(--main-color); margin-top: 15px; font-size: 14px; color: #555; white-space: pre-wrap; }
         .floating-ig { position: fixed; bottom: 25px; right: 20px; z-index: 9999; background: linear-gradient(45deg, #f09433 0%, #bc1888 100%); color: white; padding: 10px 20px; border-radius: 50px; text-decoration: none; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); font-size: 14px; font-weight: bold; }
     </style>
 </head>
@@ -93,8 +83,10 @@
         <div id="searchView" class="view fade-in">
             <div class="filter-section">
                 <div class="search-box">
-                    <input type="text" id="searchInput" placeholder="搜尋店名或關鍵字..." onkeyup="filterData()">
+                    <input type="text" id="searchInput" placeholder="搜尋店名或評價..." onkeyup="filterData()">
                 </div>
+                <div id="tagList" class="tag-cloud"></div>
+                <div id="toggleBtn" class="toggle-tags-btn" onclick="toggleTags()">更多標籤...</div>
             </div>
         </div>
 
@@ -114,6 +106,7 @@
         const sheetID = "1SzMD4N7G66Iu3OnlX5POVTi-45hRsPBk_50B6CwyjZQ";
         const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetID}/export?format=csv`;
         let allData = [];
+        let activeTags = new Set();
         let currentMode = 'search';
         let currentPath = [];
 
@@ -124,30 +117,61 @@
                     allData = results.data.map(row => ({
                         rawRegion: row['區域'] || '',
                         regionLevels: (row['區域'] || '').split('-').map(s => s.trim()),
+                        tags: row['標籤'] ? row['標籤'].split(/[,，]/).map(t => t.trim()) : [],
                         name: row['店名'] || '', address: row['地址'] || '', recommender: row['推薦人'] || '',
                         content: row['評價內容'] || '',
                         imgs: row['圖片網址'] ? row['圖片網址'].split(/[;；]/).map(i => i.trim()) : []
                     })).filter(item => item.name);
+                    renderTags();
                     renderCards(allData);
                 }
             });
         }
 
         function switchMode(mode) {
-            currentMode = mode; currentPath = [];
+            currentMode = mode; currentPath = []; activeTags.clear();
             document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`btn-${mode}`).classList.add('active');
-            const targetView = (mode === 'search') ? 'searchView' : 'categoryView';
-            document.getElementById(targetView).style.display = 'block';
-            if (mode === 'goody') currentPath = ['好物'];
-            (mode === 'search') ? renderCards(allData) : renderNav();
+            if (mode === 'search') {
+                document.getElementById('searchView').style.display = 'block';
+                renderTags(); renderCards(allData);
+            } else {
+                document.getElementById('categoryView').style.display = 'block';
+                if (mode === 'goody') currentPath = ['好物'];
+                renderNav();
+            }
+        }
+
+        function renderTags() {
+            const tags = new Set();
+            allData.forEach(item => item.tags.forEach(t => { if(t) tags.add(t); }));
+            const tagList = document.getElementById('tagList');
+            tagList.innerHTML = '';
+            tags.forEach(tag => {
+                const btn = document.createElement('button');
+                btn.className = `tag-btn ${activeTags.has(tag) ? 'active' : ''}`;
+                btn.innerText = tag;
+                btn.onclick = () => { 
+                    activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag); 
+                    btn.classList.toggle('active');
+                    filterData(); 
+                };
+                tagList.appendChild(btn);
+            });
+        }
+
+        function toggleTags() {
+            const cloud = document.getElementById('tagList');
+            cloud.classList.toggle('expanded');
+            document.getElementById('toggleBtn').innerText = cloud.classList.contains('expanded') ? "收合標籤" : "更多標籤...";
         }
 
         function renderNav() {
             const navContent = document.getElementById('navContent');
             const navBreadcrumb = document.getElementById('navBreadcrumb');
             let filteredList = allData;
+            if (currentMode === 'food') filteredList = filteredList.filter(item => item.regionLevels[0] !== '好物');
             currentPath.forEach((lvl, idx) => { filteredList = filteredList.filter(item => item.regionLevels[idx] === lvl); });
             let options = new Set();
             filteredList.forEach(item => { const nextLvl = item.regionLevels[currentPath.length]; if (nextLvl) options.add(nextLvl); });
@@ -167,20 +191,22 @@
         function goBack() { currentPath.pop(); renderNav(); }
 
         function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => { alert('已複製名稱: ' + text); });
+            navigator.clipboard.writeText(text).then(() => { alert('已複製: ' + text); });
         }
 
         function renderCards(data) {
             const list = document.getElementById('list');
             list.innerHTML = '';
             data.forEach((item, index) => {
-                let cardClass = "card";
-                if (item.rawRegion.includes("美妝")) cardClass += " beauty";
-                else if (item.rawRegion.includes("好物")) cardClass += " goody";
+                let cardClass = "card", btnText = "點我開啟地圖", icon = "fa-map-marker-alt";
+                if (item.rawRegion.includes("美妝") || item.rawRegion.includes("好物")) {
+                    btnText = "撒錢連結這邊請 (慎點"; icon = "fa-shopping-cart";
+                    cardClass += item.rawRegion.includes("美妝") ? " beauty" : " goody";
+                }
                 const card = document.createElement('div');
                 card.className = cardClass;
                 let swiperHtml = item.imgs.length > 0 && item.imgs[0] ? `<div class="swiper swiper-${index}"><div class="swiper-wrapper">${item.imgs.map(img => `<div class="swiper-slide"><img src="${img}"></div>`).join('')}</div><div class="swiper-pagination"></div></div>` : '';
-                const linkHtml = item.address.startsWith('http') ? `<a href="${item.address}" target="_blank" class="btn-link"><i class="fas fa-map-marker-alt"></i> 查看詳情</a>` : `<span>${item.address}</span>`;
+                const linkHtml = item.address.startsWith('http') ? `<a href="${item.address}" target="_blank" class="btn-link"><i class="fas ${icon}"></i> ${btnText}</a>` : `<span>${item.address}</span>`;
                 card.innerHTML = `${swiperHtml}<h2>${item.name} <i class="far fa-copy copy-icon" onclick="copyToClipboard('${item.name}')"></i></h2><div class="info-row">${linkHtml}</div><div class="info-row">來自 <span class="recommender-badge">${item.recommender}</span> 的推薦</div><div class="comment-box">${item.content}</div>`;
                 list.appendChild(card);
                 if (item.imgs.length > 1) new Swiper(`.swiper-${index}`, { pagination: { el: '.swiper-pagination', clickable: true } });
@@ -189,7 +215,11 @@
 
         function filterData() {
             const term = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = allData.filter(item => item.name.toLowerCase().includes(term) || item.content.toLowerCase().includes(term));
+            const filtered = allData.filter(item => {
+                const matchSearch = item.name.toLowerCase().includes(term) || item.content.toLowerCase().includes(term);
+                const matchTags = activeTags.size === 0 || Array.from(activeTags).every(t => item.tags.includes(t));
+                return matchSearch && matchTags;
+            });
             renderCards(filtered);
         }
         fetchData();
